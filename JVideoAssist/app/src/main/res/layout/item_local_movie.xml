@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="220dp" />
+    <ImageView
+        android:id="@+id/item_iv"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/item_titile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#fff"
+        android:text="内容部分" />
+    <TextView
+        android:id="@+id/item_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/surfaceView"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        android:textColor="#333"
+        android:text="播放时长：60min"/>
+    <TextView
+        android:id="@+id/item_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_time"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:textColor="#333"
+        android:text="视频大小：1000M"/>
+    
+
+</RelativeLayout>
