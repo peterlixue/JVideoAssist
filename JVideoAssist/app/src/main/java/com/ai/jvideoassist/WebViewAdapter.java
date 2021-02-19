@@ -45,14 +45,14 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
         public RecycleViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView.findViewById(R.id.video_webview);
-            mWebViews.add(mView);
+
 
             WebSettings WebSet = mView.getSettings();    //获取webview设置
             WebSet.setJavaScriptEnabled(true);              //设置JavaScript支持
 
             WebSet.setSupportZoom(true);            // 设置可以支持缩放
 
-            WebSet.setBuiltInZoomControls(true);    // 设置出现缩放工具
+            WebSet.setBuiltInZoomControls(false);    // 设置出现缩放工具
 
             WebSet.setUseWideViewPort(true);        //扩大比例的缩放
 
@@ -100,7 +100,11 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
     @Override
     public void onBindViewHolder(@NonNull WebViewAdapter.RecycleViewHolder holder, int position) {
         WebView view = holder.mView;
+        if (mWebViews.contains(view) == false) {
 
+            view.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");
+            mWebViews.add(view);
+        }
         //view.setText(list.get(position));
 
     }
@@ -113,13 +117,12 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
 
     public void loadData() {
        for (WebView itemV : mWebViews) {
-           itemV.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");
+           itemV.reload();
        }
     }
 
     public void closeData() {
         for (WebView itemV : mWebViews) {
-            itemV.clearCache(true);
             itemV.stopLoading();
         }
     }

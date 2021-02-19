@@ -37,7 +37,7 @@ public class FragSecond extends Fragment {
 
     protected final String TAG = this.getClass().getSimpleName();
 
-    private static final int ShowCol = 1;
+    private static final int ShowCol = 2;
 
     private RecyclerView recyclerView;
     private Context mContext;
@@ -136,9 +136,9 @@ public class FragSecond extends Fragment {
 
         mStreamUrls = new ArrayList<>();
         mStreamUrls.add("1");
-//        mStreamUrls.add("2");
-//        mStreamUrls.add("3");
-//        mStreamUrls.add("4");
+        mStreamUrls.add("2");
+        mStreamUrls.add("3");
+        mStreamUrls.add("4");
 
     }
 
