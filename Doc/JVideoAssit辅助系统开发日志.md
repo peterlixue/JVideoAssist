@@ -873,3 +873,14 @@
 
   - 如果是单画面显示，需要解决画面在recycleview里面切换的话的，数据加载和停止加载。避免卡顿，网络流量拥堵。
   - 使用其他的activity的生命周期来控制。
+  - 网上解决的实现： 监听listview以及Recyclerview滚动时候 item显示与不显示
+  - https://github.com/xuhuawei131/RecyclerViewItemVisible
+
+- 看到流式编程，java的流式编程，Rxjava 
+
+  - 总的来说，流式编程是一种声明式编程（Declarative programming），即声明要做什么，而非怎么做的编程风格。
+
+    ```css
+    new Random(47).ints(5, 20)
+                    .distinct().limit(7).sorted().forEach(System.out::println);
+    ```
