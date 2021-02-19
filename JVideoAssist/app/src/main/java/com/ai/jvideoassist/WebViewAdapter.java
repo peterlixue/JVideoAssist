@@ -45,7 +45,7 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
         public RecycleViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView.findViewById(R.id.video_webview);
-
+            mWebViews.add(mView);
 
             WebSettings WebSet = mView.getSettings();    //获取webview设置
             WebSet.setJavaScriptEnabled(true);              //设置JavaScript支持
@@ -59,7 +59,7 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
             WebSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);   //自适应屏幕
             WebSet.setLoadWithOverviewMode(true);
 
-            mView.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");
+            //mView.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");
 
             mView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -82,7 +82,11 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
                     return true;
                 }
             });
+
+
         }
+
+
     }
 
     @NonNull
@@ -96,6 +100,7 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
     @Override
     public void onBindViewHolder(@NonNull WebViewAdapter.RecycleViewHolder holder, int position) {
         WebView view = holder.mView;
+
         //view.setText(list.get(position));
 
     }
@@ -105,5 +110,18 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
         return list.size();
     }
 
+
+    public void loadData() {
+       for (WebView itemV : mWebViews) {
+           itemV.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");
+       }
+    }
+
+    public void closeData() {
+        for (WebView itemV : mWebViews) {
+            itemV.clearCache(true);
+            itemV.stopLoading();
+        }
+    }
 
 }

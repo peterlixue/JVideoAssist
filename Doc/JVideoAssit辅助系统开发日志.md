@@ -759,7 +759,8 @@
 
 - 问题程序：
 
-  - app 切换frangment时候，会重新调用onCreateView, 这里的数据就会重新加载，影响了第二次数据的顺序，显示的视频就乱了，播放的索引position乱了
+  - app 切换frangment时候，会重新调用onCreateView, 这里的数据就会重新加载，影响了第二次数据的顺序，显示的视频就乱了，播放的索引position乱了。 利用
+  - setOffscreenPageLimit，设置多少个页面常驻内存。
   
 - android之针对fragment多次调用onCreateView的问题
 
@@ -807,3 +808,58 @@
     Cumm：运行iftop到目前时间的总流量
     peak：流量峰值
     rates：分别表示过去 2s 10s 40s 的平均流量
+    
+    https://my.oschina.net/u/3367404/blog/1803360
+    
+    ```
+     sudo iftop -i wlp7s0 -B -P
+    ```
+    
+    
+
+---
+
+2021年02月19日08:54:17
+
+- android fragment配合viewpager或者底部导航栏使用 onResume不生效的解决办法
+
+  - Fragment+ViewPager 滑动时 onResume和onPause
+
+    -  https://blog.csdn.net/zheng0203/article/details/48318223
+
+  - 产生的原因
+    Fragment依托于Activity，其内部的OnResume和OnPause方法真正归属于其依托的Activity，在Activity可见性变化的时候，才会调用这两个方法；如果在Activity中包含一个ViewPager + 多个Fragment的结构，在Fragment的切换过程中，因为Activity一直显示，所以Fragment切换是不会调用OnResume和OnPause方法的，当然第一次创建Fragment的时候是会调用的。
+
+    那么问题来了，我们想要在子Fragment对用户可见性变化时处理一些逻辑，该怎么办呢？
+
+    解决办法
+    在fragment中使用onHiddenChanged，代码如下
+
+    https://blog.csdn.net/wy313622821/article/details/108347150
+    
+  - Android Fragment＋ViewPager 组合使用
+  
+    - https://blog.csdn.net/paladinzh/article/details/88078989?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
+    - 详解分析原理和解决办法的优缺点，提出综合解决的方法，加强版本
+    - 优秀的总结
+  
+- webview网络视频流数据切换界面的时候，一直在加载
+
+  - WebView退出时停止视频播放
+    网上比较流行的方法:
+
+    在activity的onPause函数中调用webview的onPause函数。
+
+    弊端:视频虽然停止播放但是还是在从网上加载数据(观察流量统计);
+
+    比较好的方法:
+
+    在activity的onPause函数中调用webview的onPause函数。
+
+    在activity的onDestroy函数中webview.loadUrl("file:///android_asset/nonexistent.html"); 
+
+    原文:http://stackoverflow.com/questions/5946698/how-to-stop-youtube-video-playing-in-android-webview
+
+  - 怎么暂停WebView中视频,停止加载网络数据或者网络页面
+
+- 

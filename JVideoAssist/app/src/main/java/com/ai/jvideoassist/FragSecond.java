@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class FragSecond extends Fragment {
 
-    private static final String TAG = "FragSecond";
+    protected final String TAG = this.getClass().getSimpleName();
 
     private static final int ShowCol = 1;
 
@@ -153,4 +153,26 @@ public class FragSecond extends Fragment {
     }
 
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d(TAG,"setUserVisibleHint:" + isVisibleToUser);
+        if (mRecycleAdapter == null)
+            return;
+        if (isVisibleToUser)
+        {
+            mRecycleAdapter.loadData();
+        }
+        else
+        {
+            mRecycleAdapter.closeData();
+        }
+
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.d(TAG,"onHiddenChanged:" + hidden);
+    }
 }

@@ -57,4 +57,17 @@ public class FragFourth extends Fragment {
 
         Log.d(TAG, "FragFourth onDestroy");
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d(TAG,"setUserVisibleHint:" + isVisibleToUser);
+
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.d(TAG,"onHiddenChanged:" + hidden);
+    }
 }
