@@ -884,3 +884,120 @@
     new Random(47).ints(5, 20)
                     .distinct().limit(7).sorted().forEach(System.out::println);
     ```
+
+---
+
+- realsense相机视频的采集
+  - vlc测试realsense视频的播放通道，发现接入电脑后，设备挂载在/dev/video5,/dev/video6后面，
+  - 其中彩色图像是在/dev/video6, 可以提供给uvc驱动采集,提供给mjpg-stream流媒体服务器采集
+  - /dev/video4和/dev/video6有图像，4是带点的灰度图。6是原始RGB图。
+
+---
+
+2021年02月20日09:56:35
+
+###### 1. Android 的视频播放方式和性能研究
+
+- android 播放rtsp流的三种方式, 直接放入rtsp的url流地址
+-  https://huangxiaoguo.blog.csdn.net/article/details/109628952#commentBox
+  - videoview
+  - surfaceview+mediaplayer
+  - 使用开源库NodeMediaClient-Android
+- Intel Realsense D435 python multiprocessing 摄像头多进程流传输
+  - https://blog.csdn.net/Dontla/article/details/104944982?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-6&spm=1001.2101.3001.4242
+
+###### 2. Linux查看网卡带宽的两个命令
+
+- 1、ethtool
+  ethtool 网络接口名
+- 2、lspci  
+  当前是博通BCM5709千兆网卡Gigabit（万兆网卡显示为10-Gigabit）
+  #lspci -vvv | grep Ethernet
+  01:00.0 Ethernet controller: Broadcom Corporation NetXtreme II BCM5709 GigabitEthernet (rev 20)
+- https://www.cnblogs.com/jeray/p/8761188.html
+
+###### 3. Python使用UDP实现720p视频传输 
+
+- 这个分片传输,分片对应的区域刷新图片显示,感觉有点野路子
+- jpg压缩原始图像到10-20倍
+- https://blog.csdn.net/u013033845/article/details/86765598
+
+###### 4. 搭建USB摄像头转RTSP服务器的多种方法
+
+- https://www.cnblogs.com/chay/p/10553787.html
+- 多个相机的视频播放问题
+
+###### 5. 各个相机厂家提供的原生RTSP码流,可能不一样, 用videoView控件播放视频流的问题
+
+- videoview是android原生控件，是基于android硬件的硬解码方案，不同硬件配置的手机的硬解码方案也是有区别的； 而vlc是软解码方案，不和硬件耦合，所以vlc只要能编译出能用的so，是不挑手机的.
+- 所以可以采用第三方rtsp服务器库,生成标准一致的rtsp流,再提供给自己的库解码显示,或者视频显示控件显示
+- 需要测试三种播放rtsp三种方式的支持情况.
+- Android使用VideoView播放网络、rtsp码流视频  https://blog.csdn.net/huanzhongying/article/details/53032909 问题讨论,硬件和软件适配的问题
+- 
+
+###### 6. 网上讲解的rtsp流创建和播放的技术讲解方案
+
+- 基于NDK开发Android平台RTSP播放器
+
+  -  https://www.cnblogs.com/haibindev/p/12081565.html
+  - 可以商务合作
+  - 有原理图,分析,讲解
+
+- Android Vitamio的使用解析
+
+  - https://blog.csdn.net/huaxun66/article/details/53367079
+  - github开源,支持广泛.
+  - https://github.com/yixia/VitamioBundle
+
+- Android ijkplayer的使用解析
+
+  - https://blog.csdn.net/huaxun66/article/details/53401231
+  - https://github.com/Bilibili/ijkplayer 
+
+- 原生的VideoView
+
+  - 说是支持格式有限,性能不如别的.我没有测试,不好下结论
+  - 安卓原生 VideoView实现rtsp流媒体的播放
+  - https://blog.csdn.net/xundh/article/details/85218844
+
+- vlc+ffmpeg+ffplayer
+
+- surfaceview+mediaplayer
+
+- 开源库NodeMediaClient-Android
+
+- 其他开源客户端
+
+  - rtmp-rtsp-stream-client-java
+
+  - FFmpegAndroid
+
+  - SmarterStreaming https://github.com/daniulive/SmarterStreaming 这个有讲解直播系统的框架图,系统流程图,部署原理图. 理解直播系统很好
+
+  - RTSP/RTMP推拉流SDK概览图
+
+    ![RTSP/RTMPæ¨ææµSDKæ¦è§å¾](https://camo.githubusercontent.com/56b6acb1975b1ab70d43ad3f5a59fbdbddc6bf20a121f7c48ffcb03d3fec3a86/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f323032303032303631323137343331372e706e673f782d6f73732d70726f636573733d696d6167652f77617465726d61726b2c747970655f5a6d46755a33706f5a57356e6147567064476b2c736861646f775f31302c746578745f6148523063484d364c7939696247396e4c6d4e7a5a473475626d56304c334a6c626d6831615445784d54493d2c73697a655f31362c636f6c6f725f4646464646462c745f3730)
+
+  - **多路RTSP/RTMP转RTMP推送SDK概览图**
+
+    - ![å¤è·¯RTSP/RTMPè½¬RTMPæ¨éSDKæ¦è§å¾](https://camo.githubusercontent.com/41b5955f60084708a7a221382b5818d35b4255f075ff3949dc6ac5bc8cad9a11/687474703a2f2f64616e697573646b2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30312f64616e69756c6976655f72656c617973646b5f32303230303133302e706e67)
+    - 图片来源
+
+###### 7. RTSP流媒体服务器的技术实现或者流媒体推流分发的实现
+
+- srs
+- nginx+rtsp/rtmp-module/http-module
+- CDN
+- ffserver
+- EasyDarWin
+- Wowza
+- android 原生的MediaCodeC编码解码
+
+
+
+###### 8. 播放案例
+
+- 是否支持 多路直播流同时播放
+
+- android 两个播放器同时播放视频
+- https://blog.csdn.net/u010648159/article/details/89386097

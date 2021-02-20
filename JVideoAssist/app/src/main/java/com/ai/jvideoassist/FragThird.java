@@ -14,7 +14,8 @@ import androidx.fragment.app.Fragment;
 public class FragThird extends Fragment {
 
     private static final String TAG = "FragThird";
-
+    private static final String Description = "测试recycleview自定义2行2列,使用开源NodePlayer来同时播放流媒体";
+    
     public FragThird() {
     }
 
