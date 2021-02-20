@@ -56,7 +56,7 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
 
             WebSet.setUseWideViewPort(true);        //扩大比例的缩放
 
-            WebSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);   //自适应屏幕
+            WebSet.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);   //自适应屏幕
             WebSet.setLoadWithOverviewMode(true);
 
             //mView.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");

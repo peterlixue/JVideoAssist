@@ -36,8 +36,10 @@ import java.util.List;
 public class FragSecond extends Fragment {
 
     protected final String TAG = this.getClass().getSimpleName();
+    private static final String Description = "测试recycleview自定义2列,使用webView播放Mjpg-stream流媒体";
 
     private static final int ShowCol = 2;
+
 
     private RecyclerView recyclerView;
     private Context mContext;
@@ -73,8 +75,9 @@ public class FragSecond extends Fragment {
         recyclerView = view.findViewById(R.id.video_recycle_view);
 
         //gridlayout setting
-        RecyclerView.LayoutManager gridLayoutManager = new GridLayoutManager(mContext, ShowCol);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        RecyclerView.LayoutManager gridLayoutManagerCol = new GridLayoutManager(mContext, ShowCol);
+        recyclerView.setLayoutManager(gridLayoutManagerCol);
+
 
         DividerItemDecoration dividerVertical = new DividerItemDecoration(mContext, RecyclerView.VERTICAL);
         dividerVertical.setDrawable(mContext.getResources().getDrawable(R.drawable.shape_item_decoration));

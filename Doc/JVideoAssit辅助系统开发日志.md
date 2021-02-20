@@ -1001,3 +1001,47 @@
 
 - android 两个播放器同时播放视频
 - https://blog.csdn.net/u010648159/article/details/89386097
+
+
+
+---
+
+- 布局优化
+- RecyclerView双列显示属性配置
+  StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+  recyclerView.setLayoutManager(layoutManager);
+- RecyclerView GridLayoutManager 行数 列数
+  - 设置行数 7行
+    GridLayoutManager layoutManager = new GridLayoutManager(this,7); layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+    recyclerViewSelect.setLayoutManager(layoutManager);
+  - 测试有效,直接使用GridLayoutManager, 然后调用方向,setOrientation()来区分行还是列
+  - 链接：https://www.jianshu.com/p/267d3f1e047d
+- recyleview 采用gridlayout布局后,设置了2行2列, 但是它是根据Item的内容,自适应内容的宽度和高度
+  - 每一个item自适应视频的宽度和高度, 造成内部有滚动条
+  - 一个屏幕只能显示2行,1列,我想显示2行2列,在一个屏幕
+  - 关于RecyclerView的宽高调整
+    - https://blog.csdn.net/crazyman2010/article/details/54315109?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-7.control&dist_request_id=4a3e3065-3f90-4c67-9ee0-d8fdfc44b04e&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-7.control
+    - 设置ItemView的间隔高宽
+    - ItemView适应RecyclerView, 固定RecycleView,设置内部itemview的大小宽高
+    - RecyclerView适应ItemView, 固定itemview内容, recycleview根据内容变化宽和高.
+  - Android RecyclerView中动态设置Item的宽高
+    - https://blog.csdn.net/yu540135101/article/details/113701746?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-3&spm=1001.2101.3001.4242
+    - 2021 两种方式
+  - 横向RecyclerView item修改宽度，均分Android手机屏幕的方法
+    - https://blog.csdn.net/qq_43983650/article/details/105076507
+  - 待续
+  - 
+  - 
+
+---
+
+开发
+
+- 计划使用开源的NodeMediaClient-Android,来同步播放4个rtsp流
+  - 后续再解决item的高度和宽度的限制问题
+  - 后续解决,界面切换,自动断流,停止播放的问题
+- 2020最新RTMP+HTTP+RTSP直播地址汇总（亲测可用）
+  - https://willarun365.blog.csdn.net/article/details/109180771
+  - 用VLC打开,网络流,可以看到视频,自己测试过CCTV1的RTSP流
+- 设计NodePlayerAdapter,使用播放开源NodePlayer插件,可以同时播放4路RTSP, 画面不卡顿
+- 4副图片直接有1-2秒内的不同步
