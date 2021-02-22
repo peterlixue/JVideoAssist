@@ -47,6 +47,7 @@ public class FragThird extends Fragment {
 
         //gridlayout setting
         GridLayoutManager gridLayoutManagerCol = new GridLayoutManager(mContext, ShowCol);
+        gridLayoutManagerCol.setOrientation(GridLayoutManager.VERTICAL);  //默认设置
         recyclerView.setLayoutManager(gridLayoutManagerCol);
         GridLayoutManager gridLayoutManagerRow = new GridLayoutManager(mContext, ShowRow);
         gridLayoutManagerRow.setOrientation(GridLayoutManager.HORIZONTAL);
@@ -59,6 +60,8 @@ public class FragThird extends Fragment {
         DividerItemDecoration dividerHorizontal = new DividerItemDecoration(mContext, RecyclerView.HORIZONTAL);
         dividerHorizontal.setDrawable(mContext.getResources().getDrawable(R.drawable.shape_item_decoration));
         recyclerView.addItemDecoration(dividerHorizontal);
+
+
 
 
         //load data List and load data with appConfig play mode
@@ -132,6 +135,8 @@ public class FragThird extends Fragment {
         int playmode = Integer.parseInt(AppConfig.getIns().mPlayMode);
 
         mRecycleAdapter = new NodePlayAdapter(mStreamUrls, mContext);
+        mRecycleAdapter.init(ShowRow,ShowCol);
+
         recyclerView.setAdapter(mRecycleAdapter);
 
     }
