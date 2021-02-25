@@ -1018,19 +1018,39 @@
   - 链接：https://www.jianshu.com/p/267d3f1e047d
 - recyleview 采用gridlayout布局后,设置了2行2列, 但是它是根据Item的内容,自适应内容的宽度和高度
   - 每一个item自适应视频的宽度和高度, 造成内部有滚动条
+  
   - 一个屏幕只能显示2行,1列,我想显示2行2列,在一个屏幕
+  
   - 关于RecyclerView的宽高调整
     - https://blog.csdn.net/crazyman2010/article/details/54315109?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-7.control&dist_request_id=4a3e3065-3f90-4c67-9ee0-d8fdfc44b04e&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-7.control
     - 设置ItemView的间隔高宽
     - ItemView适应RecyclerView, 固定RecycleView,设置内部itemview的大小宽高
     - RecyclerView适应ItemView, 固定itemview内容, recycleview根据内容变化宽和高.
+    
   - Android RecyclerView中动态设置Item的宽高
     - https://blog.csdn.net/yu540135101/article/details/113701746?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-3&spm=1001.2101.3001.4242
     - 2021 两种方式
+    
   - 横向RecyclerView item修改宽度，均分Android手机屏幕的方法
+    
     - https://blog.csdn.net/qq_43983650/article/details/105076507
+    
   - 待续
-  - 
+  
+  - RecyclerView的item宽度不能全屏显示
+  
+  - ```
+    @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_complain_list, parent, false);
+            view.setOnClickListener(this);
+            return new ViewHolder(view);
+        }
+        此处传入的parent即为item的根布局 
+    ```
+  
+    
+  
   - 
 
 ---
@@ -1045,3 +1065,179 @@
   - 用VLC打开,网络流,可以看到视频,自己测试过CCTV1的RTSP流
 - 设计NodePlayerAdapter,使用播放开源NodePlayer插件,可以同时播放4路RTSP, 画面不卡顿
 - 4副图片直接有1-2秒内的不同步
+
+---
+
+2021年02月22日09:26:39
+
+#### 一. 问题1
+
+- 今天解决4画面情况,均分在平板的屏幕上面显示的问题,也就是recycleView里面的Item自适应固定宽度和高度
+
+  - Android RecyclerView的item大小保持四个半  https://www.cnblogs.com/xgjblog/p/10485152.html
+  - 横向滚动的RecycleView一屏显示五个半，低于五个平均分布
+  - 先计算出RecyclerView的宽高，然后在Adapter的onCreateViewHolder中设置view的高度
+
+- 还是继续参考以前的网上的实现方案,现在看代码是明白它的原理了
+
+  - https://blog.csdn.net/qq_35893839/article/details/79125952
+  - 4路视频显示,自适应屏幕的宽度和高度进行播放,限制了recycleview中的宽度和高度
+  - 
+
+- GridLayoutManager.SpanSizeLookup 白话文描述使用
+
+  - https://blog.csdn.net/mylike_45/article/details/106160078
+  - 今天就讲它的两个方法getSpanIndex和getSpanSize 所占份数和份数所在的索引
+
+- Android11踩坑日记 getWindowManager().getDefaultDisplay().getWidth() 已被废弃
+
+  - https://blog.csdn.net/yhroppo/article/details/109112272
+
+  - https://www.it1352.com/2043546.html
+
+  - ```
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((getResources().getDisplayMetrics().widthPixels - CommonUtil.dip2px(mContext, 5)) / 4.5f),
+     
+    ViewGroup.LayoutParams.MATCH_PARENT);
+    ```
+
+    
+
+-  墨玉  / 老罗的Android之旅（总结）
+
+  - https://www.kancloud.cn/alex_wsc/androids#/catalog
+
+- #### 总结, 在视图适配器里面,计算得到屏幕的宽高(不包含边界区域), 然后根据设定的画面个数,几行几列,得到view里面每一个item的播放控件的宽高,在界面适配器中,createviewholder()里面设定item的布局参数的宽高就可以了.
+
+  ```
+   public NodePlayAdapter.RecycleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+          View view = LayoutInflater.from(mContext).inflate(R.layout.item_nodeview, parent, false);
+          view.getLayoutParams().width = mItemWidth;
+          view.getLayoutParams().height = mItemHeight;
+  
+          RecycleViewHolder myViewHolder = new RecycleViewHolder(view);
+          return myViewHolder;
+      }
+  ```
+
+#### 二. 问题2
+
+- 解决点击画面, 或者长按全屏播放画面的功能
+
+- NodePlayerView开源组件,是可以基于SurfaceView和TextureView实现的播放界面, 我程序里面是设置的渲染类型setRenderType()为Surface的方式.
+
+- surfaceview是靠surfaceholder(), getHolder()来设置视图窗口的大小来显示的.
+
+  - Android SurfaceView实现全屏播放例子 https://blog.csdn.net/weixin_34192732/article/details/85695361
+
+  - https://blog.csdn.net/m0_37824232/article/details/109587022 SurfaceView全屏铺满的方法 2020
+
+  - SurfaceView全屏播放问题解决方案 mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+
+  - https://blog.csdn.net/qq_35293703/article/details/103369428
+
+  - https://www.cnblogs.com/CharlesGrant/p/4605198.html
+
+  - **JieCaoVideoPlayer**
+
+    　　实现Android的全屏视频播放，支持完全自定义UI、手势修改进度和音量、hls、rtsp，设置http头信息，也能在ListView、ViewPager和ListView、ViewPager和Fragment等多重嵌套模式下全屏工作，占用空间非常小，不到60k。
+
+    本次是通过 SurfaceView + MediaPlayer 实现 横屏 全屏 播放. 
+
+- 在自定义的NodeAdapter的creatoviewholder()里面设置触摸事件,里面设置item的布局参数大小,但是其他的item无法控制状态,所以进入全屏播放,再退出全屏,感觉布局就乱了.
+
+- 网上搜寻了一下一般的解决方法:
+
+  - 当出现需求时，我一般不会去直接写，我会上网搜了一下其他博客，发现大多数写的很麻烦，有人用弹出Dialog实现，有人在Imageview上面盖了一层视图方法实现，而且代码也很多，上百行，当他们都有一些问题，例如
+
+    - 没有放大缩小的动画
+
+    - Dialog扩展性不是太高
+
+    - 上面盖一层视图，实现RecyclerView太麻烦
+
+    - 代码量大，等等
+
+- 自己想着还是得在父窗口中,来实现触摸接口,然后控制全屏状态下的布局参数, 变成显示1个,退出全屏显示4个. 自动切换默认布局和全屏布局. 
+
+  - 可以参考这个: https://www.cnblogs.com/oreox/p/10818515.html
+  - 为RecyclerView的item设置点击事件 , 子view控件事件的向上处理.外部处理.
+  - https://blog.csdn.net/weixin_42630638/article/details/107174609 这个添加事件处理的接口流程才是对的,详细的
+  - Android小记：RecyclerView添加Item点击事件监听  三种方式实现
+
+- 网上只是讲了Activity进入全屏和退出全屏的代码实现,
+
+- 测试使用新建一个secondActivity的主窗口,一个新的player来播放, 效果是可以的,就是中间会重新加载网络流,再播放, 然后中间的全屏和正常模式的切换,管理.
+
+  - 解决在非Activity中使用startActivity
+  - https://blog.csdn.net/weixin_33672400/article/details/87973017?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=997f4b3f-ab89-4a0b-8f21-6a2b419b1efa&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
+  - Android学习笔记之Android Studio添加新的Activity
+  - https://www.cnblogs.com/edensyd/p/8621670.html
+  - 启动另外一个 Activity 并结束当前 Activity
+  - https://blog.csdn.net/qq_37129266/article/details/110950598
+  - android(多个Activity之间切换)
+  - https://blog.csdn.net/weixin_38420342/article/details/84344496
+  - 加一个SecondActivity后,来回切换MainActivity和SecondActivity,声明周期的运行感觉有点乱,需要梳理. 按home键,有时候MainActivity在后台运行.
+  - 所以放弃采用增加一个新的Activity的做法, 还是管控好一个Activity里面显示.
+
+---
+
+2021年02月23日11:54:34
+
+- 继续解决全屏的问题
+  - 这么用GridLayoutManager，你可能还真没尝试过 https://www.jianshu.com/p/60aa2fc17870
+  - 有源码阅读分析,
+  
+- 安卓自定义长按事件(延长响应时间)
+  - https://blog.csdn.net/lili625/article/details/78467180?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=b00eef0c-33b5-4678-933d-b2d2746f8f5a&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
+  - https://my.oschina.net/zhangqingcai/blog/29468 事件区别
+  - 长按OnLongClickListener无法修改长按时间的解决办法
+  - https://blog.csdn.net/mirkowug/article/details/54030612
+  
+- android 双击事件的处理
+
+  - 单击 -- 使用Android系统提供的OnClickListener接口即可实现
+    双击 -- Android系统中并未定义这类事件，所以需要我们自己定义。
+
+  - https://www.jianshu.com/p/e55286d9e5f3
+
+  - Android之按钮点击事件（单击、双击、长按等）
+
+    - 系统默认的延时*时间是*500ms,当按下500ms后才触发LongClick事件
+
+  - https://blog.csdn.net/zbw1185/article/details/94412673
+
+  - Android实现双击事件的两种方式 https://www.136.la/tech/show-93893.html
+
+  - android中的DoubleTap 单击和双击的代码实现, 抽象类和接口的设计
+
+    - https://www.imooc.com/wenda/detail/604604
+
+    - ```
+      
+      ```
+
+      
+
+- recyclerView三种布局管理器
+  - 线性布局管理器
+  - 网格布局管理器
+  - 瀑布布局管理器
+  
+- Android视频直播全屏实现
+  - https://www.cnblogs.com/baiyi168/p/11344319.html
+  - https://github.com/DickyQie/android-video
+  - android webview中视频播放及全屏
+  - https://www.jianshu.com/p/54ac34790db0
+  - RecyclerView详解（四）：LayoutManager布局管理器
+    - https://www.jianshu.com/p/501e10bc31f1
+  
+
+---
+
+2021年02月25日11:50:38
+
+- 发现用NodePlayer开源组件播放rtmp流媒体,同一个CCTV地址,有时候播放不稳定,容易不显示画面
+- recycleview切换不同的adapter,然后通知数据变化,会重新creatviewholder, bindview, 重新绘制加载子元素Item.
+- 策略想法,至少可可行.通过在主窗口内容recycleview父布局FrameLayout中,底部放置同样的一个RecycleView, 然后判断进入全屏和退出全屏时候的状态,让原来多画面的recycleview显示隐藏, 全屏的新的recycleview隐藏和显示. 达到进入全屏和退出全屏的目的
+- 然后考虑,进入全屏继续播放原来的视频源,和退出全屏, 响应不同的画面视频源的进入全屏播放和退出播放.

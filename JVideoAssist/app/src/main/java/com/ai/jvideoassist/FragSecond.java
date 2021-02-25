@@ -35,7 +35,8 @@ import java.util.List;
  */
 public class FragSecond extends Fragment {
 
-    protected final String TAG = this.getClass().getSimpleName();
+    private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
+
     private static final String Description = "测试recycleview自定义2列,使用webView播放Mjpg-stream流媒体";
 
     private static final int ShowCol = 2;

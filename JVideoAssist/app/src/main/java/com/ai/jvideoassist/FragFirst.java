@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class FragFirst extends Fragment {
 
-    protected final String TAG = this.getClass().getSimpleName();
+    private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
     private int mGridCol;
     private int mGridRow;

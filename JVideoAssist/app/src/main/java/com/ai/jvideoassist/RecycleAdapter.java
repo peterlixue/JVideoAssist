@@ -14,6 +14,8 @@ import java.util.List;
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.RecycleViewHolder> {
 
+    private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
+
     private List<String> list;
     Context context;
 

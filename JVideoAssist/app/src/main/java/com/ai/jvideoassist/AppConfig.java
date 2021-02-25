@@ -4,6 +4,8 @@ package com.ai.jvideoassist;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 /**
  * 应用程序全局配置实体类
  */
@@ -15,7 +17,7 @@ public class AppConfig {
     public String mVideMaxNum;
     public String mPlayMode;
 
-
+    public static final String TAG = "MyLog ";
 
     private AppConfig() {}
 
@@ -26,13 +28,18 @@ public class AppConfig {
         return SingletonAppConfigHolder.mInstance;
     }
 
+    @NonNull
+    public String getTag(Object logObject) {
+        return "MyLog " + logObject.getClass().getSimpleName();
+    }
+
     public void initAppConfig(Context context) {
 
         if (PropertiesUtil.getIns().loadProperties(context) == false) {
-            Log.d("AppConfig", "error 读取appConfig配置文件失败");
+            Log.d(TAG, "error 读取appConfig配置文件失败");
         }
         else {
-            Log.d("AppConfig", "OK 读取appConfig配置文件成功");
+            Log.d(TAG, "OK 读取appConfig配置文件成功");
         }
         mVideoNum = PropertiesUtil.getIns().getValue("VideoShowNumber", "4");
         mVideMaxNum = PropertiesUtil.getIns().getValue("VideoMaxNumber", "16");
@@ -54,10 +61,10 @@ public class AppConfig {
         PropertiesUtil.getIns().setValue("PlayMode",mPlayMode);
 
         if (PropertiesUtil.getIns().saveProperties(context) == false) {
-            Log.d("AppConfig", "error 保存appConfig配置文件失败");
+            Log.d(TAG, "error 保存appConfig配置文件失败");
         }
         else {
-            Log.d("AppConfig", "OK 保存appConfig配置文件成功");
+            Log.d(TAG, "OK 保存appConfig配置文件成功");
         }
     }
 

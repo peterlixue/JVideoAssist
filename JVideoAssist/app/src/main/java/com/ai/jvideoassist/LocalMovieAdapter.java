@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class LocalMovieAdapter extends RecyclerView.Adapter<LocalMovieAdapter.LocalViewHolder> {
 
+    private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
+
     private Context context;
     private List<LocalMovieBean> mDatas;
     private MediaPlayer player;
