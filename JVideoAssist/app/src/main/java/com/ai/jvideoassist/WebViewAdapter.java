@@ -104,6 +104,7 @@ public class WebViewAdapter extends RecyclerView.Adapter<WebViewAdapter.RecycleV
         WebView view = holder.mView;
         if (mWebViews.contains(view) == false) {
 
+            //view.loadUrl("rtsp://192.168.1.101:8554/mytest");
             view.loadUrl("http://"+ip_addr+":"+port+"/?action=stream");
             mWebViews.add(view);
         }

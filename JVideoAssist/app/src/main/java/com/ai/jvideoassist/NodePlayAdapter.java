@@ -38,7 +38,9 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     private String ip_addr = "192.168.1.101";
     private String port = "8080";
 
-    private String rtsp_addr = "rtmp://58.200.131.2:1935/livetv/cctv1";
+    //private String rtsp_addr = "rtmp://58.200.131.2:1935/livetv/cctv1";
+    //private String rtsp_addr = "rtsp://192.168.1.101:8554/mytest";
+    private String rtsp_addr = "rtmp://192.168.1.101/live/livestream";
 
     private int mScreenWidth;
     private int mScreenHeight;

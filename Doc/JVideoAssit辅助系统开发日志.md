@@ -1240,4 +1240,193 @@
 - 发现用NodePlayer开源组件播放rtmp流媒体,同一个CCTV地址,有时候播放不稳定,容易不显示画面
 - recycleview切换不同的adapter,然后通知数据变化,会重新creatviewholder, bindview, 重新绘制加载子元素Item.
 - 策略想法,至少可可行.通过在主窗口内容recycleview父布局FrameLayout中,底部放置同样的一个RecycleView, 然后判断进入全屏和退出全屏时候的状态,让原来多画面的recycleview显示隐藏, 全屏的新的recycleview隐藏和显示. 达到进入全屏和退出全屏的目的
-- 然后考虑,进入全屏继续播放原来的视频源,和退出全屏, 响应不同的画面视频源的进入全屏播放和退出播放.
+- 然后考虑,进入全屏继续播放原来的视频源,和退出全屏, 响应不同的画面视频源的进入全屏播放和退出播放
+
+---
+
+2021年02月26日11:18:25
+
+- Handler用法及解析 handlerThread
+
+  - https://blog.csdn.net/qq_37321098/article/details/81535449
+
+  - 1.handler作用: 
+
+    1）传递消息Message
+
+    2）子线程通知主线程更新ui
+
+- Butterknife
+
+  - ButterKnife是一个专注于Android系统的View注入框架,以前总是要写很多findViewById来找到View对象，有了ButterKnife可以很轻松的省去这些步骤。是大神JakeWharton的力作，目前使用很广。最重要的一点，使用ButterKnife对性能基本没有损失，因为ButterKnife用到的注解并不是在运行时反射的，而是在编译的时候生成新的class。项目集成起来也是特别方便，使用起来也是特别简单。
+
+    ButterKnife项目地址：[https://github.com/JakeWharton/butterknife](https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2FJakeWharton%2Fbutterknife)
+
+---
+
+2021年03月01日09:37:23
+
+- 用vlc搭建rtsp流媒体服务器
+  - https://blog.csdn.net/byxdaz/article/details/108024357 本机 成功实现利用vlc作为RTSP流媒体服务的和播放客户端测试
+  - 本机测试,刚开始有10s缓冲时间,做了转码分发. 本机服务端cpu使用率很高,200%左右了,转码的负载
+  - vlc能搭建简单的RTSP流媒体服务器, 然后用客户端播放测试
+  - https://www.cnblogs.com/mq0036/p/12037667.html
+    - 各种搭建形式,UDP, RTSP, RTP(MJPG),HTTP
+  
+- VLC的bug,导致播放死机
+
+  - 用vlc打开自己认为的RTSP流媒体服务地址例如, rtsp://192.168.1.101/mytest.sdp  本机电脑直接死机,cpu奇高, 只有鼠标能响应了.
+
+- RTMP/HTTP/HLS流媒体开源服务器 SRS 说明文档
+
+  - https://www.wenjiangs.com/doc/srs-docs
+  - https://github.com/ossrs/srs
+  - https://www.cnblogs.com/yjmyzz/p/srs_study_1_install_push_and_pull_stream.html 博客说明
+  - https://blog.csdn.net/qq_40265247/article/details/106506690
+  - https://www.cnblogs.com/innershare/p/11045363.html
+  - https://blog.csdn.net/qq_34317255/article/details/90019528 其他指令说明
+
+- 应用案例说明 01
+
+  ```
+  某工厂监控系统
+  2014.4 by 斗破苍穷(154554381)
+  
+  某工厂的监控系统主要组成：
+  
+  采集端：采集端采用IPC摄像头安装在工厂重要监控位置，通过网线或者wifi连接到监控中心交换机。
+  监控中心：中心控制服务器，负责管理采集端和流媒体服务器，提供PC/Android/IOS观看平台。
+  流媒体服务器：负责接收采集端的流，提供观看端RTMP/HLS的流。
+  观看端：PC/Android/IOS。要求PC端的延迟在3秒内。Android/IOS延迟在20秒之内。
+  主要流程包括：
+  
+  采集端启动：IPC摄像头像监控中心注册，获得发布地址，并告知监控中心采集端的信息，譬如摄像头设备名，ip地址，位置信息之类。
+  采集端开始推流：IPC摄像头使用librtmp发布到地址，即将音频视频数据推送到RTMP流媒体服务器。
+  流媒体服务器接收流：流媒体服务器使用SRS，接收采集端的RTMP流。FMS-3/3.5/4.5都有问题，估计是和librtmp对接问题。
+  观看端观看：用户使用PC/Android/IOS登录监控中心后，监控中心返回所有的摄像头信息和流地址。PC端使用flash，延迟在3秒之内；Android/IOS使用HLS，延迟在20秒之内。
+  时移：监控中心会开启录制计划，将RTMP流录制为FLV文件。用户可以在监控中心观看录制的历史视频。
+  ```
+
+  
+
+- 实践记录
+
+  - 今天下载开源的流媒体库SRS, 作为国人开发的优秀的流媒体服务平台.决定尝试下效果,应到自己的研究项目中
+
+  - 参考 https://github.com/ossrs/srs/wiki/v3_CN_SampleRTMP RTMP部署实例
+
+  - 根据github教程,下载3.0版本,然后配置./configure && make. 一定记得make, 我开始忘了自己是否make, 然后发现找不到./objs/srs
+
+  - make过程大概5分钟左右
+
+  - 然后配置自己的RTMP服务器设置myrtmp.conf, 默认设置,加一个log输出指定
+
+  - 运行服务  ./objs/srs -c ./conf/myrtmp.conf
+
+  - 任何利用去年学习的ffmpeg进行推流,发现没有找到直接可靠的记录,自己平时记录的信息太过杂散,没有直接记录具体成功的过程.
+
+  - 采用教程上面的命令,播放自带的flv视频,进行推流测试.
+
+  - 在trunk目录下建立一个shell脚本,testFFmpegPush.sh
+
+    ```
+    #!/bin/bash
+     for((;;)); do \
+            /usr/bin/ffmpeg -re -i ./doc/source.200kbps.768x320.flv \
+            -vcodec copy -acodec copy \
+            -f flv -y rtmp://192.168.1.101/live/livestream; \
+            sleep 1; \
+        done
+    
+    ```
+
+    chmod +x testFFmpegPush.sh 赋予运行权限.
+
+  - 启动脚本,ffmepg成功执行命令. 输出多媒体信息.
+
+  - 启动vlc客户端,输入对应的网络流地址,进行拉流测试.rtmp://192.168.1.101/live/livestream. 发现可以稳定播放srs提供的视频源
+
+  - 然后在自己开发的Android JVideoAssit中,输入rtmp流媒体的地址, 使用NodeMediaPlay成功播放了rtmp流, 实时性比较高, 偶尔出现卡顿. 
+
+  - 测试是在自己的实验室的wifi条件下,4路视频同时拉流播放.
+
+- 下一步,测试本机USB相机的推流,利用上半年研究记录的知识, 2020年10月26日 USB摄像头利用ffmpeg实现rtmp推流
+
+  - ffmpeg 采集相机数据生成本地视频文件
+
+     `ffmpeg -f video4linux2 -r 30 -s 640x480 -i /dev/video0 output_video.avi`
+
+    `ffmpeg -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 output_data.mkv`
+
+  - ffmpeg 采集相机数据进行RTMP推流
+
+    `./ffmpeg -f video4linux2 -s  640x480 -i /dev/video0  -f flv rtmp://127.0.0.1:1935/live/live`
+
+    `ffmpeg -r 30  -i /dev/video0 -vcodec h264 -max_delay 100 -f flv -g 5 -b 700000 rtmp://219.216.87.170/live/test1`
+
+    `ffmpeg -f video4linux2 -qscale 10 -r 12 -s 640x480 -i /dev/video0 -f alsa -i hw:1 -ab 16 -ar 22050 -ac 1 -f mp3 -f flv rtmp://127.0.0.1/rtmpsvr/rtmp1`
+
+  - 网上研究记录
+
+    - linux FFMPEG 摄像头采集数据推流 https://www.cnblogs.com/enumx/p/12346711.html  最新的成功,比较全
+    - 国外写的,https://www.scivision.dev/youtube-live-ffmpeg-livestream/,  命令很全
+    - FFmpeg Live stream via Python PyLivestream
+
+- 实际测试
+
+  - 用ffmpeg采集本机USB相机,形成RTMP流,再本机VLC拉流播放,延时就比较大, 10秒延时级别+卡顿.
+
+    ```shell
+    ffmpeg -r 30  -i /dev/video0 -vcodec h264 -max_delay 100 -f flv -g 5 -b 700000 rtmp://192.168.1.101/live/test
+    ```
+
+  - 用ffmpeg采集本机USB相机,形成RTMP流,推送给SRS服务端,再本机VLC拉流播放,延时就比较大, 10秒延时级别+卡顿.
+  
+  ---
+  
+  2021年03月02日08:57:55
+  
+  - 继续优化FFmpeg的采集效果, 因为srs提供的命令推流,flv文件`source.200kbps.768x320.flv`速度比较快,客户端拉流比较快
+  
+  - 改进命令
+  
+    ```
+    ffmpeg -f video4linux2 -s  640x480 -i /dev/video0  -f flv rtmp://127.0.0.1:1935/live/livesteam
+    ```
+  
+    加上-g 20 -b:v 700k以后, vlc拉流播放画面很明显,清晰度提高了, 但是延时还是10s中左右,稳定一些了, 采样率是b那个参数.
+  
+    延时8秒中左右
+  
+  - 改进命令,根据youtub的外文的设置,修改
+  
+    ```shell
+    #!/bin/bash
+    ffmpeg \
+    -f v4l2 -r 30 -i /dev/video0 \
+    -c:v libx264 -pix_fmt yuv420p -preset ultrafast -g 30 -b:v 500k \
+    -threads 0 -bufsize 512k \
+    -f flv rtmp://192.168.1.101:1935/live/livestream
+    ```
+  
+    刚开始感觉延时比较高,大概有8-10秒中, 后续运行一段时间后,实时性能提高,本地vlc播放延时高些为3-5秒.
+  
+    Android收集客户端拉取srs 流来进行播放, 实时性更好写,延时大概,1-2秒. 
+  
+    这个方案可以行. 不要用srs作为rtmp服务器,直接利用ffmpeg进行软解码推流,进行播放都可以.
+  
+    运行环境配置:
+  
+    - 可能是自己机器里面有nginx-rtmp-module配置,直接就可以进行rtmp的推流服务.
+    - 需要在新机器验证
+  
+- 下一步解决嵌入式ARM处理设备上面的,视频推流就可以. 还可以参考srs中的低延时方案,来进行视频流的分发传输.
+
+- 手机客户端用了第三方的sdk,可以再使用其他的哔哩哔哩bilibili的客户端看看, NodeMediaPlayer这个是不支持rtsp, 然后感觉不是很稳.
+
+
+
+-- -
+
+- 《直播从零开始》SRS 带宽测试
+  - https://langyastudio.blog.csdn.net/article/details/109743843?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-11.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-11.control
