@@ -1430,3 +1430,61 @@
 
 - 《直播从零开始》SRS 带宽测试
   - https://langyastudio.blog.csdn.net/article/details/109743843?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-11.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-11.control
+
+
+
+---
+
+2021年03月08日15:47:37
+
+- 起重机的算法适配开发完毕
+- 开始项目其他的功能实现
+- 语音识别的云端SDK的集成, 硬件部署端的方案测试
+
+---
+
+2021年03月09日09:24:29
+
+- 讯飞语音注册,实名认证,免费功能领取
+
+- 服务器认证信息
+
+  ```
+  服务接口认证信息
+  APPID
+  6046ca59
+  APISecret
+  6255e0e0e3ce3ed6462c64d751ed08cf
+  APIKey
+  c58057cda3ca656c78ca3f29f273ca18
+  *SDK调用方式只需APPID。APIKey或APISecret适用于WebAPI调用方式。
+  ```
+
+  可以开通特定修正功能,候选词, 然后频繁使用的热词,来提高匹配度.
+
+- https://console.xfyun.cn/services/iat 启用普通的语音听写, 下载对应版本的SDK
+
+  -    语音听写 Android SDK 文档 [https://www.xfyun.cn/doc/asr/voicedictation/Android-SDK.html#_1%E3%80%81%E7%AE%80%E4%BB%8B](https://www.xfyun.cn/doc/asr/voicedictation/Android-SDK.html#_1、简介)
+
+- Android Studio创建assets、jniLibs目录
+
+  - https://blog.csdn.net/gengbaolong/article/details/79592584
+
+- Android 科大讯飞语音SDK集成步骤
+
+  - 离线识别 https://blog.csdn.net/qq_20330595/article/details/104573598?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242
+  - [https://www.xfyun.cn/doc/asr/voicedictation/Android-SDK.html#_2%E3%80%81sdk%E9%9B%86%E6%88%90%E6%8C%87%E5%8D%97](https://www.xfyun.cn/doc/asr/voicedictation/Android-SDK.html#_2、sdk集成指南)  官方集成指南
+
+- Android集成科大讯飞SDK实现语音识别
+
+  - https://mp.weixin.qq.com/s?__biz=MzA4Nzk0NTU0Nw==&mid=2247484101&idx=1&sn=ef473df94e2815053e21d6f9c3955995&chksm=9030fae1a74773f7d0a2eb6fb8885bb6acf6c3f209e633f626d817582abc2fdd4414775213ac&scene=21#wechat_redirect
+  - https://cloud.tencent.com/developer/article/1471667 
+  - https://blog.csdn.net/Vaccae/article/details/111595864  这里代码可以直接参考实现, 可以复制
+  - 干货】Android利用SurfaceView结合科大讯飞修改语音实别UI
+
+- 实践过程
+  - 折腾半天集成SDK, 发现是一个appID这个设置时候前面没有写=号
+  - asserts的目录放置不对
+  - 那个msc.jar和其他库文件可以直接全部放在libs目录下面
+  - 最终还是参照demo的工程设置
+  - 后面单独写一个activity测试程序,就可以出来科大的那个识别界面, 但是结果显示,还是要自己写的.

@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_white"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/txt_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:text="语言识别结果"
+        android:textColor="@color/text_yellow"
+        android:textSize="20sp" />
+    <TextView
         android:id="@+id/txt_msg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="呵呵"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:text="识别提示消息"
         android:textColor="@color/text_yellow"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/buttonStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="开始识别" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/buttonStop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="停止识别" />
+
+
+</LinearLayout>
