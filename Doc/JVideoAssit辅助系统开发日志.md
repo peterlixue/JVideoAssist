@@ -8,7 +8,7 @@
   - **HC-SR04的驱动程序**
   - GPIO 引脚驱动库
 
-- 开发板推荐,基于androi系统
+- 开发板推荐,基于android系统
 
   - rockchip 的坑很多，粗有外表
     建議從 Hisilicon 入手
@@ -1488,3 +1488,41 @@
   - 那个msc.jar和其他库文件可以直接全部放在libs目录下面
   - 最终还是参照demo的工程设置
   - 后面单独写一个activity测试程序,就可以出来科大的那个识别界面, 但是结果显示,还是要自己写的.
+
+---
+
+2021年03月10日14:59:07
+
+- Linux下代码文件.h .cpp放到windows vs2010编译失败的问题
+
+  - 今天将在Linux下面移植的重机支腿反力计算接口类,通过Windows发给徐工, 他将h和cpp文件添加到他的MFC工程后,提示处很多错误,莫名奇妙的
+
+  - 我自己在本机qt测试没有任何问题
+
+  - 后面徐工说解决了,是代码格式的文件,文件编码的原因.
+
+  - Linux C++代码移植到Windows要解决的问题
+
+    - https://wang520.blog.csdn.net/article/details/8930533?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
+
+    - https://blog.csdn.net/liumy_2013/article/details/106125880
+
+    - 代码没有任何问题。我怀疑是文件编码问题。我的处理方法是：新建TXT文档，重命名为xxx.h或xxx.cpp，然后把代码复制到新建的文档中。用新建的文档替换以前的.h和.cpp文件。所有从linux拷贝到windows的.h和.cpp都按如此方法替换。然后再用vs2010编译，成功编译。
+
+    - 出现这种情况的原因为两种操作系统的中文压缩方式不同，在windows环境中中文压缩一般为gbk，而在linux环境中为utf8，
+
+      这就导致了在windows下能正常显示txt文件在linux环境下打开呈现了乱码状态。
+
+    - windows与linux文件拷贝出现中文乱码解决
+      使用ubuntu下载convmv
+      使用命令 convmv -f UTF-8 -t GBK -r --nosmart --notest <文件夹名>
+      由于windows使用GBK汉字显示，而linux使用UTF-8汉字，所以需要做相应转换后传输解决乱码问题
+
+    - --notest 真正进行操作
+
+      ```
+      命令使用：
+      格式:convmv -f 源编码 -t 新编码 [选项] 文件名/目录名
+      ```
+
+      原文链接：https://blog.csdn.net/zhangyuejf/article/details/109049392
