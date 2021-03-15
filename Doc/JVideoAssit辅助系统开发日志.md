@@ -1561,6 +1561,13 @@
   - 
 
 - OA电脑系统中,rar分块压缩一个大于10M的文件, 才能传输给其他人
+
 - android实现下拉框和输入框结合 
   - 将一个EditText和ListView+PopupWindow 结合起来。自定义一个EditText，在自定义控件中用PopupWindow实现弹出ListView，已达到想要的效果。	
   - https://blog.csdn.net/adolph_jun/article/details/78254441
+  
+- Android进阶之自定义ViewGroup—带你一步步轻松实现ViewPager
+
+  - https://www.jianshu.com/p/af8e14ff5f0c
+  - 自定义的viewgroup, 如何使用,比如自定义的CellLayout, 可以通过addView()来添加子控件.
+  - 

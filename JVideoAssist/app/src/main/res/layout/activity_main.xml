@@ -47,7 +47,7 @@
             android:id="@+id/rb_voice"
             style="@style/tab_menu_item"
             android:drawableTop="@drawable/tab_menu_message"
-            android:text="@string/tab_menu_analysis" />
+            android:text="@string/tab_menu_voice" />
 
 
         <RadioButton
