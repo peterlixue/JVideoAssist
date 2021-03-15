@@ -1526,3 +1526,41 @@
       ```
 
       原文链接：https://blog.csdn.net/zhangyuejf/article/details/109049392
+    
+  - 科大讯飞语音唤醒(Android)
+  
+    - https://blog.csdn.net/hdhhd/article/details/109810121
+    - https://console.xfyun.cn/services/awaken  平台唤醒词语设置,sdk下载
+  
+  - Android ListView以及RecyclerView里面 监听Item可见以及不可见的状态
+  
+    - https://blog.csdn.net/huazai30000/article/details/88361440
+    - 这个通常是打点的需求。 打省略号....
+    
+  - Android 超好用的播放器——ijkplayer
+  
+    - https://www.jianshu.com/p/c5d972ab0309
+    - Android基于ijkplayer的 RTSP视频播放器简易实现（20200923）
+    - https://blog.csdn.net/weixin_42651184/article/details/108755895?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
+    - **https://github.com/wenyuanw/Android_Ijkplayer_app**
+    - Android开发-基于ijkplayer框架开发网络电视直播播放器的实现
+      - https://blog.csdn.net/fukaimei/article/details/80553709?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
+  
+  - Android视频直播的实现
+  
+    - https://blog.csdn.net/huaxun66/article/details/53427771?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control  清晰讲解
+  
+  - 使用RecyclerView结合jiaozivideoplayer去加载不同类型的布局
+  
+    - https://blog.csdn.net/asjqkkkk/article/details/78489245 
+    - 布局内容丰富, 又告诉如何使用recycleview的教程,浅显易懂.
+    - https://github.com/asjqkkkk/MySimpleNews  必须看看这个设计实现, 播放器,图片,点击效果,全屏,退出全屏
+  
+  - https://gitee.com/tcy0206/dkplayer  基于IjkPlayer的视频播放器，支持直播点播，悬浮窗播放，广告播放，边播边缓存；支持重力感应自动全屏；完美实现ListView和RecyclerView列表播放；支持清晰度切换；支持一行代码切换MediaPlayer和ExoPlayer；模仿抖音效果demo；Android O PiP demo
+  
+  - 
+
+- OA电脑系统中,rar分块压缩一个大于10M的文件, 才能传输给其他人
+- android实现下拉框和输入框结合 
+  - 将一个EditText和ListView+PopupWindow 结合起来。自定义一个EditText，在自定义控件中用PopupWindow实现弹出ListView，已达到想要的效果。	
+  - https://blog.csdn.net/adolph_jun/article/details/78254441

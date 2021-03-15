@@ -1,4 +1,4 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.ai.jvideoassist.util.LocalMovieBean;
+import com.ai.jvideoassist.R;
+import com.ai.jvideoassist.config.AppConfig;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

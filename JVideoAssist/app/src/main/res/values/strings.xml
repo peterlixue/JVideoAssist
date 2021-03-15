@@ -5,10 +5,10 @@
     <string name="action_settings">Settings</string>
 
 
-    <string name="tab_menu_video">视频</string>
-    <string name="tab_menu_analysis">分析</string>
-    <string name="tab_menu_ctrl">控制</string>
-    <string name="tab_menu_setting">设置</string>
+    <string name="tab_menu_video">视频监控</string>
+    <string name="tab_menu_analysis">算法分析</string>
+    <string name="tab_menu_voice">语音控制</string>
+    <string name="tab_menu_setting">系统设置</string>
 
 
 </resources>

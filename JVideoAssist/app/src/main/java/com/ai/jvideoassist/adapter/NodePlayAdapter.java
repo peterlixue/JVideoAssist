@@ -1,4 +1,4 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.ai.jvideoassist.listener.OnItemOptListener;
+import com.ai.jvideoassist.R;
+import com.ai.jvideoassist.util.SecondActivity;
+import com.ai.jvideoassist.config.AppConfig;
 
 import java.util.HashMap;
 
@@ -41,6 +46,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     //private String rtsp_addr = "rtmp://58.200.131.2:1935/livetv/cctv1";
     //private String rtsp_addr = "rtsp://192.168.1.101:8554/mytest";
     private String rtsp_addr = "rtmp://192.168.1.101/live/livestream";
+    private final  int mFrameHeight = 0;
 
     private int mScreenWidth;
     private int mScreenHeight;
@@ -77,19 +83,19 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             Insets insets = windowMetrics.getWindowInsets()
                     .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
 
-            mScreenHeight = windowMetrics.getBounds().height() - insets.top - insets.bottom;
+            mScreenHeight = windowMetrics.getBounds().height() - insets.top - insets.bottom ;
             ;
             mScreenWidth = windowMetrics.getBounds().width() - insets.left - insets.right;
 
-            mItemHeight = mScreenHeight / showRow;
+            mItemHeight = (mScreenHeight - mFrameHeight)/ showRow;
             mItemWidth = mScreenWidth / showCol;
         } else {
 
             DisplayMetrics outMetrics = new DisplayMetrics();
             ((Activity) (mContext)).getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-            mScreenHeight = outMetrics.heightPixels;
+            mScreenHeight = outMetrics.heightPixels ;
             mScreenWidth = outMetrics.widthPixels;
-            mItemHeight = mScreenHeight / showRow;
+            mItemHeight = (mScreenHeight - mFrameHeight) / showRow;
             mItemWidth = mScreenWidth / showCol;
         }
 
@@ -136,6 +142,8 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             nodePlayer.setVideoEnable(true);
             nodePlayer.setBufferTime(10);
             nodePlayer.setMaxBufferTime(0);
+
+            //nodePlayerView.setVisibility(View.INVISIBLE);
 
 
         }

@@ -1,14 +1,16 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.ai.jvideoassist.R;
+import com.ai.jvideoassist.config.AppConfig;
 
 import java.util.List;
 

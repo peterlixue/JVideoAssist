@@ -1,4 +1,4 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.widget;
 
 
 import android.content.Context;
@@ -7,9 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -18,12 +15,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.ai.jvideoassist.adapter.NodePlayAdapter;
+import com.ai.jvideoassist.listener.OnItemOptListener;
+import com.ai.jvideoassist.R;
+import com.ai.jvideoassist.config.AppConfig;
+
 import java.util.HashMap;
 import java.util.List;
 
 
-public class FragThird extends Fragment {
+public class FragVideo extends Fragment {
 
     private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
@@ -45,7 +46,7 @@ public class FragThird extends Fragment {
     private HashMap<Integer, String> mFullUrls;
     private NodePlayAdapter mFullAdapter;
 
-    public FragThird() {
+    public FragVideo() {
         mFullScreenMode = false;
     }
 
@@ -80,13 +81,18 @@ public class FragThird extends Fragment {
         mFullScreenMode = false;
         mFullRecView = view.findViewById(R.id.video_fullRecview);
         mFullRecView.setLayoutManager(new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false));
-        //mFullRecView.setVisibility(View.INVISIBLE);
+
+        //data created
+        mPlayUrls = new HashMap<>();
+        mFullUrls = new HashMap<>();
+
+
         //load data List and load data with appConfig play mode
         loadData();
 
         //bind view and adapter
         bindViewAdapter();
-
+        //view.setVisibility(View.INVISIBLE);
         Log.d(TAG, " onCreateView over");
         return view;
     }
@@ -157,19 +163,13 @@ public class FragThird extends Fragment {
 
         Log.d(TAG, "loadData");
 
-        mStreamUrls = new ArrayList<>();
-        mStreamUrls.add("1");
-        mStreamUrls.add("2");
-        mStreamUrls.add("3");
-        mStreamUrls.add("4");
 
-        mPlayUrls = new HashMap<>();
         mPlayUrls.put(0, "rtmp://58.200.131.2:1935/livetv/cctv1");
         mPlayUrls.put(1, "rtmp://58.200.131.2:1935/livetv/cctv1");
         mPlayUrls.put(2, "rtmp://58.200.131.2:1935/livetv/cctv1");
         mPlayUrls.put(3, "rtmp://58.200.131.2:1935/livetv/cctv1");
 
-        mFullUrls = new HashMap<>();
+
         mFullUrls.put(0, "rtmp://58.200.131.2:1935/livetv/cctv1");
 
     }
@@ -194,7 +194,7 @@ public class FragThird extends Fragment {
                 if (!mFullScreenMode) {
                     //进入全屏播放
                     Log.d(TAG, "enter fullview");
-                   // mRecycleAdapter.enterFullMode(view, position);
+                    // mRecycleAdapter.enterFullMode(view, position);
                     enterFullMode(view,position);
                     mFullScreenMode = true;
                 } else {

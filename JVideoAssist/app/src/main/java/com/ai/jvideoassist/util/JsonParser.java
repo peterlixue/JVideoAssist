@@ -1,4 +1,4 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

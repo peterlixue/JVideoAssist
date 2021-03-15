@@ -1,6 +1,5 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.util;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +7,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.ai.jvideoassist.MainActivity;
+import com.ai.jvideoassist.R;
+import com.ai.jvideoassist.config.AppConfig;
 
 import cn.nodemedia.NodePlayer;
 import cn.nodemedia.NodePlayerView;

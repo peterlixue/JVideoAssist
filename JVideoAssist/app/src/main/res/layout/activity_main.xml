@@ -11,7 +11,7 @@
         android:background="@color/bg_topbar">
 
         <TextView
-            android:id="@+id/txt_topbar"
+            android:id="@+id/txt_main_topbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -38,22 +38,17 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/rb_channel"
+            android:id="@+id/rb_video"
             style="@style/tab_menu_item"
             android:drawableTop="@drawable/tab_menu_channel"
             android:text="@string/tab_menu_video" />
 
         <RadioButton
-            android:id="@+id/rb_message"
+            android:id="@+id/rb_voice"
             style="@style/tab_menu_item"
             android:drawableTop="@drawable/tab_menu_message"
             android:text="@string/tab_menu_analysis" />
 
-        <RadioButton
-            android:id="@+id/rb_better"
-            style="@style/tab_menu_item"
-            android:drawableTop="@drawable/tab_menu_better"
-            android:text="@string/tab_menu_ctrl" />
 
         <RadioButton
             android:id="@+id/rb_setting"

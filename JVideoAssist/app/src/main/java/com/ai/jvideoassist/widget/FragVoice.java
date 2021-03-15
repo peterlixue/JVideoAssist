@@ -1,14 +1,11 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.widget;
 
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +19,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.ai.jvideoassist.util.JsonParser;
+import com.ai.jvideoassist.R;
+import com.ai.jvideoassist.config.AppConfig;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
-import com.iflytek.cloud.RecognizerListener;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
@@ -41,9 +39,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- * Created by Jay on 2015/8/28 0028.
+ * 语音识别界面
  */
-public class FragFourth extends Fragment {
+public class FragVoice extends Fragment {
 
     private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
@@ -63,12 +61,12 @@ public class FragFourth extends Fragment {
     private final  String  mAppID = "=6046ca59";
     private String resultType = "json";
 
-    public FragFourth() {
+    public FragVoice() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.txt_content,container,false);
+        View view = inflater.inflate(R.layout.frag_voice,container,false);
         mContext = view.getContext();
         mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
         mResultView = (TextView) view.findViewById(R.id.txt_result);
@@ -284,8 +282,4 @@ public class FragFourth extends Fragment {
     }
 
 
-    //初始化并开始语音识别
-    private void InitVoice() {
-
-    }
 }

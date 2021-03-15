@@ -1,4 +1,4 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.config;
 
 
 import android.content.Context;

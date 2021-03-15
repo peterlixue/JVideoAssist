@@ -1,4 +1,4 @@
-package com.ai.jvideoassist;
+package com.ai.jvideoassist.adapter;
 
 import android.view.ViewGroup;
 
@@ -6,24 +6,31 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.ai.jvideoassist.MainActivity;
+import com.ai.jvideoassist.widget.FragSetting;
+import com.ai.jvideoassist.widget.FragVideo;
+import com.ai.jvideoassist.widget.FragVoice;
+
 
 public class FragPagerAdapter extends FragmentPagerAdapter {
 
     private static final String TAG = "FragPagerAdapter";
 
-    public final int PAGER_COUNT = 4;
+    public final int PAGER_COUNT = 3;
 
-    private FragFirst mVideoDisplayFrag = null;
-    private FragSecond myFragment2 = null;
-    private FragThird myFragment3 = null;
-    private FragFourth myFragment4 = null;
+
+    private FragVideo mVideoFrag = null;
+    private FragVoice   mVoiceFrag = null;
+
+    private FragSetting myFragment3 = null;
+
 
     public FragPagerAdapter(FragmentManager fm) {
         super(fm);
-        mVideoDisplayFrag = new FragFirst();
-        myFragment2 = new FragSecond();
-        myFragment3 = new FragThird();
-        myFragment4 = new FragFourth();
+        mVideoFrag = new FragVideo();
+        mVoiceFrag = new FragVoice();
+        myFragment3 = new FragSetting();
+
     }
 
 
@@ -48,16 +55,13 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case MainActivity.PAGE_ONE:
-                fragment = mVideoDisplayFrag;
+                fragment = mVideoFrag;
                 break;
             case MainActivity.PAGE_TWO:
-                fragment = myFragment2;
+                fragment = mVoiceFrag;
                 break;
             case MainActivity.PAGE_THREE:
                 fragment = myFragment3;
-                break;
-            case MainActivity.PAGE_FOUR:
-                fragment = myFragment4;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + position);
