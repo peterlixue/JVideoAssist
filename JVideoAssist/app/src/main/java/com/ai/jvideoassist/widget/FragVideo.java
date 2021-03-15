@@ -81,7 +81,7 @@ public class FragVideo extends Fragment {
         mFullScreenMode = false;
         mFullRecView = view.findViewById(R.id.video_fullRecview);
         mFullRecView.setLayoutManager(new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false));
-
+        mFullRecView.setVisibility(View.INVISIBLE);
         //data created
         mPlayUrls = new HashMap<>();
         mFullUrls = new HashMap<>();

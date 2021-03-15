@@ -16,7 +16,7 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
 
     private static final String TAG = "FragPagerAdapter";
 
-    public final int PAGER_COUNT = 3;
+    public final int PAGER_COUNT = 1;
 
 
     private FragVideo mVideoFrag = null;
