@@ -22,15 +22,15 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
     private FragVideo mVideoFrag = null;
     private FragVoice   mVoiceFrag = null;
 
-    private FragSetting myFragment3 = null;
+    private FragSetting mSetFrag = null;
 
 
     public FragPagerAdapter(FragmentManager fm) {
         super(fm);
         mVideoFrag = new FragVideo();
         mVoiceFrag = new FragVoice();
-        myFragment3 = new FragSetting();
-
+        mSetFrag = new FragSetting();
+        mSetFrag.setSettingChangeCallBack(mVideoFrag);
     }
 
 
@@ -61,7 +61,7 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
                 fragment = mVoiceFrag;
                 break;
             case MainActivity.PAGE_THREE:
-                fragment = myFragment3;
+                fragment = mSetFrag;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + position);

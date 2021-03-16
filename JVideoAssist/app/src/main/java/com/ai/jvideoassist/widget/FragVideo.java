@@ -20,11 +20,12 @@ import com.ai.jvideoassist.listener.OnItemOptListener;
 import com.ai.jvideoassist.R;
 import com.ai.jvideoassist.config.AppConfig;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class FragVideo extends Fragment {
+public class FragVideo extends Fragment implements FragSetting.SettingChangeCallBack{
 
     private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
@@ -32,6 +33,7 @@ public class FragVideo extends Fragment {
 
     private static final int ShowCol = 2;
     private final int ShowRow = 2;
+
 
     private RecyclerView recyclerView;
     private Context mContext;
@@ -266,5 +268,13 @@ public class FragVideo extends Fragment {
 
     public void testCall() {
         Log.d(TAG, "TestCAll()");
+    }
+
+    @Override
+    public void onSettingChanged(ArrayList<Integer> videoIndexs) {
+        if (videoIndexs.isEmpty()) {
+            return;
+        }
+        //处理对应的播放地址变化
     }
 }

@@ -1570,4 +1570,53 @@
 
   - https://www.jianshu.com/p/af8e14ff5f0c
   - 自定义的viewgroup, 如何使用,比如自定义的CellLayout, 可以通过addView()来添加子控件.
-  - 
+
+- Android实现fragment向Activity实时传递信息
+
+  - 常用的一般有三种方式来实现以上需求:
+
+    1. 通过fragment中brocastReceiver来通知activity刷新UI;
+    2. 通过eventbus订阅者模式来通知Activity实时刷新UI;
+    3. 通过fragment中编写接口设置监听器,然后在actvity中实现该接口,在接口方法中刷新UI即可
+    ————————————————
+    版权声明：本文为CSDN博主「水月沐风」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+    原文链接：https://blog.csdn.net/s1674521/article/details/78318525
+
+- Android Fragment与Activity交互的几种方式
+
+  - 这里我不再详细介绍那写比较常规的方式，例如静态变量，静态方法，持久化，application全局变量，收发广播等等。
+
+  - https://www.cnblogs.com/zhujiabin/p/7700192.html     activity 向 fragment发送消息
+
+    首先我们来介绍使用Handler来实现Fragment与Activity 的交互
+
+  - https://blog.csdn.net/tiramisu_ljh/article/details/67654454     利用handler fragment和activity双向发送消息
+
+  - https://zhuanlan.zhihu.com/p/110878981
+
+  - Android Handler正确使用姿势
+
+    - https://blog.csdn.net/geanwen/article/details/54233895
+    - removeCallbacksAndMessages
+    
+  - handler的正确使用姿势   这个讲了原理,解决方案,比较全面合理
+  
+    - https://blog.csdn.net/zhou4781182/article/details/79468682?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242
+    - Android采取了单线程UI模型，开发者无法在子线程中更新UI，为此Android为我们提供了Handler这个工具，可以开发者切换到主线程更新UI。
+    - 当前界面结束时将消息队列中未被处理的消息清除，从源头上解除了这条引用链
+  
+- Fragment与Fragment、Activity通信的四种方式 
+
+  - http://blog.sina.com.cn/s/blog_1382e29410102xan8.html
+  - 一般用接口, 实现
+  - 用广播方便灵活,
+  - Fragment直接调用Activity中的public方法
+  - Fragment直接根据包含关系拿到另一个Fragment的实例,在调用中的public方法
+
+-  设计模式C++实现（8）——代理模式,没事看看设计模式,具体开源实践技术,新的C++标准的实际使用应用,解决问题
+
+- 分布式系统开发,应用,具体应用方向
+
+  - https://blog.csdn.net/wuzhekai1985/article/details/6669219
+
+- 音视频开发 Android获取（网络和本地）视频缩略图 https://blog.csdn.net/ywl5320/article/details/107576410#comments_15101076

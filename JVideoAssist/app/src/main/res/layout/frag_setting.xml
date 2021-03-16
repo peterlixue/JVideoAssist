@@ -24,7 +24,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/voice_edittxt_01"
+            android:id="@+id/setting_edittxt_01"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -54,7 +54,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/voice_edittxt_02"
+            android:id="@+id/setting_edittxt_02"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -84,7 +84,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/voice_edittxt_03"
+            android:id="@+id/setting_edittxt_03"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -114,7 +114,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/voice_edittxt_04"
+            android:id="@+id/setting_edittxt_04"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -126,14 +126,29 @@
     </LinearLayout>
 
 
-
-
-    <Button
-        android:id="@+id/buttonStop"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="保存设置" />
+        android:background="@color/bg_white"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="保存设置" />
+
+        <Button
+            android:id="@+id/buttonDefault"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="保存设置" />
+    </LinearLayout>
+
+
 
 
 </LinearLayout>
