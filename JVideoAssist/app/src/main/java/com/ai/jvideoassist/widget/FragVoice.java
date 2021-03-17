@@ -230,13 +230,13 @@ public class FragVoice extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "FragFourth onPause");
+        Log.d(TAG, " onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "FragFourth onStop");
+        Log.d(TAG, " onStop");
         //停止显示
         //mRecycleAdapter.getItemCount()
     }
@@ -245,7 +245,7 @@ public class FragVoice extends Fragment {
     public void onResume() {
 
         super.onResume();
-        Log.d(TAG, "FragFourth onResume");
+        Log.d(TAG, " onResume");
     }
 
     @Override
@@ -257,7 +257,7 @@ public class FragVoice extends Fragment {
             mRecDlg.destroy();
         }
 
-        Log.d(TAG, "FragFourth onDestroy");
+        Log.d(TAG, " onDestroy");
     }
 
     @Override

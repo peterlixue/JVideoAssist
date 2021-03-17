@@ -8,6 +8,7 @@ import android.graphics.Insets;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ActionProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ai.jvideoassist.listener.OnItemOptListener;
+import com.ai.jvideoassist.inter.IVideoIndex;
+import com.ai.jvideoassist.inter.OnItemOptListener;
 import com.ai.jvideoassist.R;
 import com.ai.jvideoassist.util.SecondActivity;
 import com.ai.jvideoassist.config.AppConfig;
@@ -45,7 +47,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
 
     //private String rtsp_addr = "rtmp://58.200.131.2:1935/livetv/cctv1";
     //private String rtsp_addr = "rtsp://192.168.1.101:8554/mytest";
-    private String rtsp_addr = "rtmp://192.168.1.101/live/livestream";
+    //private String rtsp_addr = "rtmp://192.168.1.101/live/livestream";
     private final int mFrameHeight = 100;
 
     private int mScreenWidth;
@@ -139,7 +141,6 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             nodePlayer.setPlayerView(nodePlayerView);
             //设置RTSP流使用的传输协议,支持的模式有:
             nodePlayer.setRtspTransport(NodePlayer.RTSP_TRANSPORT_TCP);
-            nodePlayer.setInputUrl(rtsp_addr);
             //设置视频是否开启
             nodePlayer.setVideoEnable(true);
             nodePlayer.setBufferTime(10);
@@ -173,7 +174,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     public void onBindViewHolder(@NonNull final NodePlayAdapter.RecycleViewHolder holder, final int position) {
 
         Log.d(TAG, "onBindViewHolder begin");
-
+        holder.nodePlayer.setInputUrl(mPlayUrlMap.get(position));
 
         if (!mViewHolderMap.containsKey(position)) {
             mViewHolderMap.put(position, holder);
@@ -183,7 +184,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             @Override
             public void onClick(View v) {
 
-                Log.d(TAG, "onClick begin");
+                //Log.d(TAG, "onClick begin");
                 if (!holder.firstTouch) {
                     holder.firstTouch = true;
                     holder.lastClickTime = System.currentTimeMillis();
@@ -209,6 +210,64 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     @Override
     public int getItemCount() {
         return mPlayUrlMap.size();
+    }
+
+    public static String getURLFromPosition(int videoIndex) {
+
+        String tempUrl = "";
+        switch (videoIndex) {
+            case IVideoIndex.VIDEO1:
+                tempUrl = AppConfig.getIns().mVideoURL01;
+                break;
+            case IVideoIndex.VIDEO2:
+                tempUrl = AppConfig.getIns().mVideoURL02;
+                break;
+            case IVideoIndex.VIDEO3:
+                tempUrl = AppConfig.getIns().mVideoURL03;
+                break;
+            case IVideoIndex.VIDEO4:
+                tempUrl = AppConfig.getIns().mVideoURL04;
+                break;
+        }
+        return tempUrl;
+    }
+    public void updatePlayUrl(int videoIndex) {
+        if (mViewHolderMap.containsKey(videoIndex) == false) {
+            Log.d(TAG, "error: 相机videoIndex: " + videoIndex + "没有找到对应播放控件");
+            return;
+        }
+
+        String tempUrl = getURLFromPosition(videoIndex);
+
+        if (mPlayUrlMap.get(videoIndex).contentEquals(tempUrl) == true) //播放地址没变
+        {
+            Log.d(TAG, "相机" + videoIndex + "地址没变");
+            return;
+        }
+        //变化地址
+        mViewHolderMap.get(videoIndex).nodePlayer.stop();
+        mPlayUrlMap.put(videoIndex, tempUrl);
+        mViewHolderMap.get(videoIndex).nodePlayer.setInputUrl(tempUrl);
+        Log.d(TAG, "相机videoIndex: " + videoIndex + "更新到新的播放地址: " + tempUrl);
+    }
+
+
+    public void updatePlayUrl(int videoIndex,String tempUrl) {
+        if (mViewHolderMap.containsKey(videoIndex) == false) {
+            Log.d(TAG, "error: 相机videoIndex: " + videoIndex + "没有找到对应播放控件");
+            return;
+        }
+
+        if (mPlayUrlMap.get(videoIndex).contentEquals(tempUrl) == true) //播放地址没变
+        {
+            Log.d(TAG, "相机" + videoIndex + "地址没变");
+            return;
+        }
+        //变化地址
+        mViewHolderMap.get(videoIndex).nodePlayer.stop();
+        mPlayUrlMap.put(videoIndex, tempUrl);
+        mViewHolderMap.get(videoIndex).nodePlayer.setInputUrl(tempUrl);
+        Log.d(TAG, "相机videoIndex: " + videoIndex + "更新到新的播放地址: " + tempUrl);
     }
 
 
@@ -248,24 +307,6 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         }
     }
 
-    public void enterFullMode(View v, int position) {
-
-        for (Integer key : mViewHolderMap.keySet()) {
-            if (key != position) {
-                //mViewHolderMap.get(key).nodePlayerView.setVisibility(View.INVISIBLE);
-            }
-
-        }
-    }
-
-    public void exitFullMode(View v, int position) {
-
-        for (Integer key : mViewHolderMap.keySet()) {
-
-            //mViewHolderMap.get(key).nodePlayerView.setVisibility(View.VISIBLE);
-        }
-
-    }
 
     public void puaseALl() {
         for (Integer key : mViewHolderMap.keySet()) {

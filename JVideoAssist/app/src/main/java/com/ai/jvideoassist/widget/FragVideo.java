@@ -16,7 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ai.jvideoassist.adapter.NodePlayAdapter;
-import com.ai.jvideoassist.listener.OnItemOptListener;
+import com.ai.jvideoassist.inter.IVideoIndex;
+import com.ai.jvideoassist.inter.OnItemOptListener;
 import com.ai.jvideoassist.R;
 import com.ai.jvideoassist.config.AppConfig;
 
@@ -124,11 +125,14 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         Log.d(TAG, " Begin onDestroy");
         mRecycleAdapter.stopALl();
         mFullAdapter.stopALl();
+
         mRecycleAdapter.realeaseAll();
         mFullAdapter.realeaseAll();
+
         Log.d(TAG, " onDestroy");
     }
 
@@ -149,8 +153,8 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         }
         else
         {
-            mFullAdapter.stopALl();
-            mRecycleAdapter.stopALl();
+            mFullAdapter.puaseALl();
+            mRecycleAdapter.puaseALl();
         }
 
     }
@@ -167,22 +171,22 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         Log.d(TAG, "loadData");
 
 
-        mPlayUrls.put(0, "rtmp://58.200.131.2:1935/livetv/cctv1");
-        mPlayUrls.put(1, "rtmp://58.200.131.2:1935/livetv/cctv1");
-        mPlayUrls.put(2, "rtmp://58.200.131.2:1935/livetv/cctv1");
-        mPlayUrls.put(3, "rtmp://58.200.131.2:1935/livetv/cctv1");
+        mPlayUrls.put(IVideoIndex.VIDEO1, AppConfig.getIns().mVideoURL01);
+        mPlayUrls.put(IVideoIndex.VIDEO2, AppConfig.getIns().mVideoURL02);
+        mPlayUrls.put(IVideoIndex.VIDEO3, AppConfig.getIns().mVideoURL03);
+        mPlayUrls.put(IVideoIndex.VIDEO4, AppConfig.getIns().mVideoURL04);
 
 
-        mFullUrls.put(0, "rtmp://58.200.131.2:1935/livetv/cctv1");
+        mFullUrls.put(IVideoIndex.VIDEO1, AppConfig.getIns().mVideoURL01);
 
     }
 
     private void bindViewAdapter() {
 
         Log.d(TAG, "bindViewAdapter");
-        int playmode = Integer.parseInt(AppConfig.getIns().mPlayMode);
 
         mRecycleAdapter = new NodePlayAdapter(mPlayUrls, mContext);
+        //计算item中的宽高
         mRecycleAdapter.init(ShowRow, ShowCol);
         recyclerView.setAdapter(mRecycleAdapter);
 
@@ -227,8 +231,9 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
 
         mRecycleAdapter.puaseALl();
         recyclerView.setVisibility(View.INVISIBLE);
-        mFullRecView.setVisibility(View.VISIBLE);
 
+        mFullRecView.setVisibility(View.VISIBLE);
+        mFullAdapter.updatePlayUrl(0,NodePlayAdapter.getURLFromPosition(position));
         mFullAdapter.startPlayerAll();
         Log.d(TAG, "enter enterFullMode");
 
@@ -251,5 +256,8 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
             return;
         }
         //处理对应的播放地址变化
+        for (Integer index : videoIndexs) {
+            mRecycleAdapter.updatePlayUrl(index);
+        }
     }
 }

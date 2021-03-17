@@ -1623,6 +1623,8 @@
 
 - Android中Enum（枚举）的使用
 
+  - https://www.cnblogs.com/whycxb/p/7995085.html
+
   - Android官网不建议使用enums，占用内存多（Enums often require more than twice as much memory as static constants.）。
 
     Android中当你的App启动后系统会给App单独分配一块内存。App的DEX code、Heap以及运行时的内存分配都会在这块内存中
@@ -1630,11 +1632,11 @@
   - 用法,一,直接定义常量,用法二, 添加自定义属性和方法
 
   - 替代方案, 接口变量, 定义接口来代替,
-
+  
     ```
-    因为接口会自动将成员变量设置为静态的（static）、不可变的（final），这一点可以防止某些情况下错误地添加新的常量。这也使得代码看起来更简单和清晰。 同时，一个的简单测试显示，同样的接口（字节码文件）占用的空间是209个字节左右，而类（字节码文件）占用的空间是366个字节左右。更少的字节码文件意味着加载和维护的成本更低。此外，JVM 加载接口的时候，不需要担心类提供的额外特征（如重载、方法的动态绑定等），因此加载更快。
+  因为接口会自动将成员变量设置为静态的（static）、不可变的（final），这一点可以防止某些情况下错误地添加新的常量。这也使得代码看起来更简单和清晰。 同时，一个的简单测试显示，同样的接口（字节码文件）占用的空间是209个字节左右，而类（字节码文件）占用的空间是366个字节左右。更少的字节码文件意味着加载和维护的成本更低。此外，JVM 加载接口的时候，不需要担心类提供的额外特征（如重载、方法的动态绑定等），因此加载更快。
     ```
-
+  
   - ```
     public interface IConstants {
         //接口会自动将成员变量设置为静态的（static）、不可变的（final）
@@ -1645,7 +1647,13 @@
         String LANGUAGE_fr = "fr";
         String LANGUAGE_ar = "ar";
         String LANGUAGE_ru = "ru";
-    }
+  }
     ```
+  
+  - https://www.jianshu.com/p/05ab8bd3c713 避免使用枚举,增大APK的体积.
+  
+- 科大讯飞语音唤醒(Android)
 
-  - 
+  - https://blog.csdn.net/hdhhd/article/details/109810121
+  - 前面的工程项目配置和语音识别差不多，但是需要从SDK的res文件夹中复制ivw文件夹粘贴到main下面
+  - https://blog.csdn.net/TZYZlpx123456789/article/details/80839009?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ai.jvideoassist.R;
 import com.ai.jvideoassist.config.AppConfig;
+import com.ai.jvideoassist.inter.IVideoIndex;
 
 import java.util.ArrayList;
 
@@ -102,23 +103,23 @@ public class FragSetting extends Fragment {
         ArrayList<Integer>  videos = new ArrayList<Integer>();
         if (bDefault)
         {
-            if (mTxtVideo01.getText().toString() != AppConfig.getIns().mVideoURLDefault)
+            if (mTxtVideo01.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
             {
-                videos.add(1);
+                videos.add(IVideoIndex.VIDEO1);
             }
-            if (mTxtVideo02.getText().toString() != AppConfig.getIns().mVideoURLDefault)
+            if (mTxtVideo02.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
             {
-                videos.add(2);
+                videos.add(IVideoIndex.VIDEO2);
 
             }
-            if (mTxtVideo03.getText().toString() != AppConfig.getIns().mVideoURLDefault)
+            if (mTxtVideo03.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
             {
-                videos.add(3);
+                videos.add(IVideoIndex.VIDEO3);
 
             }
-            if (mTxtVideo04.getText().toString() != AppConfig.getIns().mVideoURLDefault)
+            if (mTxtVideo04.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
             {
-                videos.add(4);
+                videos.add(IVideoIndex.VIDEO4);
             }
             mTxtVideo01.setText(AppConfig.getIns().mVideoURLDefault);
             mTxtVideo02.setText(AppConfig.getIns().mVideoURLDefault);
@@ -127,24 +128,24 @@ public class FragSetting extends Fragment {
         }
         else
         {
-            if (mTxtVideo01.getText().toString() != AppConfig.getIns().mVideoURL01)
+            if (mTxtVideo01.getText().toString().contentEquals(AppConfig.getIns().mVideoURL01) == false)
             {
-                videos.add(1);
+                videos.add(IVideoIndex.VIDEO1);
                 AppConfig.getIns().mVideoURL01 = mTxtVideo01.getText().toString();
             }
-            if (mTxtVideo02.getText().toString() != AppConfig.getIns().mVideoURL02)
+            if (mTxtVideo02.getText().toString().contentEquals(AppConfig.getIns().mVideoURL02) == false)
             {
-                videos.add(2);
+                videos.add(IVideoIndex.VIDEO2);
                 AppConfig.getIns().mVideoURL02 = mTxtVideo02.getText().toString();
             }
-            if (mTxtVideo03.getText().toString() != AppConfig.getIns().mVideoURL03)
+            if ( (mTxtVideo03.getText().toString().contentEquals(AppConfig.getIns().mVideoURL03)) == false)
             {
-                videos.add(3);
+                videos.add(IVideoIndex.VIDEO3);
                 AppConfig.getIns().mVideoURL03 = mTxtVideo03.getText().toString();
             }
-            if (mTxtVideo04.getText().toString() != AppConfig.getIns().mVideoURL04)
+            if (mTxtVideo04.getText().toString().contentEquals(AppConfig.getIns().mVideoURL04) == false)
             {
-                videos.add(4);
+                videos.add(IVideoIndex.VIDEO4);
                 AppConfig.getIns().mVideoURL04 = mTxtVideo04.getText().toString();
             }
         }
