@@ -157,12 +157,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     @Override
     public void onPageSelected(int position) {
-        Log.d(TAG, "position: " + position);
+
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        Log.d(TAG, "state: " + state);
 
         //state的状态有三个，0表示什么都没做，1正在滑动，2滑动完毕
         if (state == 2) {

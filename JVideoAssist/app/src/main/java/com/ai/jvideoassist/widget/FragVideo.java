@@ -67,6 +67,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         gridLayoutManagerCol.setOrientation(GridLayoutManager.VERTICAL);  //默认设置
         recyclerView.setLayoutManager(gridLayoutManagerCol);
 
+
         GridLayoutManager gridLayoutManagerRow = new GridLayoutManager(mContext, ShowRow);
         gridLayoutManagerRow.setOrientation(GridLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(gridLayoutManagerRow);
@@ -135,7 +136,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint:" + isVisibleToUser);
-        if (recyclerView == null)
+        if (recyclerView == null || mFullAdapter == null || mRecycleAdapter == null)
             return;
         if (isVisibleToUser) {
             if (mFullScreenMode) {
@@ -193,19 +194,11 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
 
             @Override
             public void onItemDoubleClick(View view, int position) {
-                if (!mFullScreenMode) {
-                    //进入全屏播放
-                    Log.d(TAG, "enter fullview");
-                    // mRecycleAdapter.enterFullMode(view, position);
-                    enterFullMode(view,position);
-                    mFullScreenMode = true;
-                } else {
-                    //退出全屏
-                    Log.d(TAG, "exit fullview");
-                    //mRecycleAdapter.exitFullMode(view, position);
-                    exitFullMode(view,position);
-                    mFullScreenMode = false;
-                }
+
+                // mRecycleAdapter.enterFullMode(view, position);
+                Toast.makeText(mContext,",进入全屏,双击了View"+position,Toast.LENGTH_SHORT).show();
+                enterFullMode(view,position);
+                mFullScreenMode = true;
             }
         });
 
@@ -222,8 +215,10 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
             @Override
             public void onItemDoubleClick(View view, int position) {
 
-                Toast.makeText(mContext,"mFullAdapter双击了View"+position,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"退出全屏,双击了View"+position,Toast.LENGTH_SHORT).show();
                 exitFullMode(view,position);
+                mFullScreenMode = false;
+
             }
         });
     }
@@ -231,15 +226,6 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
     public void enterFullMode(View v, int position) {
 
         mRecycleAdapter.puaseALl();
-//        GridLayoutManager gridLayoutManagerCol = new GridLayoutManager(mContext, 1);
-//        gridLayoutManagerCol.setOrientation(GridLayoutManager.VERTICAL);  //默认设置
-//        recyclerView.setLayoutManager(gridLayoutManagerCol);
-//        GridLayoutManager gridLayoutManagerRow = new GridLayoutManager(mContext, 1);
-//        gridLayoutManagerRow.setOrientation(GridLayoutManager.HORIZONTAL);
-//        recyclerView.setLayoutManager(gridLayoutManagerRow);
-//
-//        recyclerView.setAdapter(mFullAdapter);
-//        mFullAdapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.INVISIBLE);
         mFullRecView.setVisibility(View.VISIBLE);
 
@@ -251,14 +237,6 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
     public void exitFullMode(View v, int position) {
 
         mFullAdapter.puaseALl();
-//        GridLayoutManager gridLayoutManagerCol = new GridLayoutManager(mContext, ShowCol);
-//        gridLayoutManagerCol.setOrientation(GridLayoutManager.VERTICAL);  //默认设置
-//        recyclerView.setLayoutManager(gridLayoutManagerCol);
-//        GridLayoutManager gridLayoutManagerRow = new GridLayoutManager(mContext, ShowRow);
-//        gridLayoutManagerRow.setOrientation(GridLayoutManager.HORIZONTAL);
-//        recyclerView.setLayoutManager(gridLayoutManagerRow);
-//        recyclerView.setAdapter(mRecycleAdapter);
-//        mRecycleAdapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.VISIBLE);
         mFullRecView.setVisibility(View.INVISIBLE);
         mRecycleAdapter.startPlayerAll();
@@ -266,9 +244,6 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         Log.d(TAG, "enter exitFullMode");
     }
 
-    public void testCall() {
-        Log.d(TAG, "TestCAll()");
-    }
 
     @Override
     public void onSettingChanged(ArrayList<Integer> videoIndexs) {

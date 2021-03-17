@@ -1,7 +1,9 @@
 package com.ai.jvideoassist.widget;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,8 @@ public class FragSetting extends Fragment {
     private Button      mBtnSave;
     private Button      mBtnDefault;
 
+    private boolean     mBDefault;
+
     public FragSetting() {
 
     }
@@ -73,20 +77,18 @@ public class FragSetting extends Fragment {
         mBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"更新了保存的相机播放地址",Toast.LENGTH_SHORT).show();
-                checkSettingChange(false);
+                //Toast.makeText(mContext,"更新了保存的相机播放地址",Toast.LENGTH_SHORT).show();
+                mBDefault = false;
+                showAlertDlg();
             }
         });
         mBtnDefault = view.findViewById(R.id.buttonDefault);
         mBtnDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"恢复默认的相机播放地址",Toast.LENGTH_SHORT).show();
-                checkSettingChange(true);
-                mTxtVideo01.setText(AppConfig.getIns().mVideoURLDefault);
-                mTxtVideo02.setText(AppConfig.getIns().mVideoURLDefault);
-                mTxtVideo03.setText(AppConfig.getIns().mVideoURLDefault);
-                mTxtVideo04.setText(AppConfig.getIns().mVideoURLDefault);
+                //Toast.makeText(mContext,"恢复默认的相机播放地址",Toast.LENGTH_SHORT).show();
+                mBDefault = true;
+                showAlertDlg();
 
             }
         });
@@ -117,8 +119,11 @@ public class FragSetting extends Fragment {
             if (mTxtVideo04.getText().toString() != AppConfig.getIns().mVideoURLDefault)
             {
                 videos.add(4);
-
             }
+            mTxtVideo01.setText(AppConfig.getIns().mVideoURLDefault);
+            mTxtVideo02.setText(AppConfig.getIns().mVideoURLDefault);
+            mTxtVideo03.setText(AppConfig.getIns().mVideoURLDefault);
+            mTxtVideo04.setText(AppConfig.getIns().mVideoURLDefault);
         }
         else
         {
@@ -144,15 +149,38 @@ public class FragSetting extends Fragment {
             }
         }
 
-
-
-
         if (mSettingCall != null)
         {
             mSettingCall.onSettingChanged(videos);
         }
 
     }
+
+    public void showAlertDlg(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("提示");
+        String content = mBDefault ? "确定恢复原始默认地址?" : "确定保存新地址?";
+
+        //设置正面按钮以及点击事件
+        builder.setMessage(content);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                checkSettingChange(mBDefault);
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }
+            );
+        builder.show();
+
+    }
+
     @Override
     public void onPause() {
         super.onPause();

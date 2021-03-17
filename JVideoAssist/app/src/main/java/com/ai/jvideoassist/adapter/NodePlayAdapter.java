@@ -32,9 +32,9 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
 
     private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
-    private HashMap<Integer,String> mPlayUrlMap;
+    private HashMap<Integer, String> mPlayUrlMap;
 
-    private HashMap<Integer,RecycleViewHolder> mViewHolderMap;
+    private HashMap<Integer, RecycleViewHolder> mViewHolderMap;
 
     private Context mContext;
 
@@ -46,7 +46,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     //private String rtsp_addr = "rtmp://58.200.131.2:1935/livetv/cctv1";
     //private String rtsp_addr = "rtsp://192.168.1.101:8554/mytest";
     private String rtsp_addr = "rtmp://192.168.1.101/live/livestream";
-    private final  int mFrameHeight = 100;
+    private final int mFrameHeight = 100;
 
     private int mScreenWidth;
     private int mScreenHeight;
@@ -54,11 +54,13 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     private int mItemWidth;
     private int mItemHeight;
 
+    private int mShowRow = 1;
+    private int mShowCol = 1;
     private boolean isFullView;
     private NodePlayerView mPlayerView;
     private NodePlayer mPlayer;
 
-    public NodePlayAdapter(HashMap<Integer,String> mapUrls, Context context) {
+    public NodePlayAdapter(HashMap<Integer, String> mapUrls, Context context) {
         this.mPlayUrlMap = mapUrls;
         this.mContext = context;
 
@@ -75,7 +77,8 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
 
     public void init(int showRow, int showCol) {
 
-
+        mShowRow = showRow;
+        mShowCol = showCol;
         //计算屏幕的宽高
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
@@ -83,24 +86,23 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             Insets insets = windowMetrics.getWindowInsets()
                     .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
 
-            mScreenHeight = windowMetrics.getBounds().height() - insets.top - insets.bottom ;
+            mScreenHeight = windowMetrics.getBounds().height() - insets.top - insets.bottom;
             ;
             mScreenWidth = windowMetrics.getBounds().width() - insets.left - insets.right;
 
-            mItemHeight = (mScreenHeight - mFrameHeight)/ showRow;
-            mItemWidth = mScreenWidth / showCol;
+
         } else {
 
             DisplayMetrics outMetrics = new DisplayMetrics();
             ((Activity) (mContext)).getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-            mScreenHeight = outMetrics.heightPixels ;
+            mScreenHeight = outMetrics.heightPixels;
             mScreenWidth = outMetrics.widthPixels;
-            mItemHeight = (mScreenHeight - mFrameHeight) / showRow;
-            mItemWidth = mScreenWidth / showCol;
         }
 
         Log.d(TAG, "mScreenHeight:" + mScreenHeight);
         Log.d(TAG, "mScreenWidth:" + mScreenWidth);
+
+
         Log.d(TAG, "mItemHeight:" + mItemHeight);
         Log.d(TAG, "mItemWidth:" + mItemWidth);
 
@@ -114,8 +116,8 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         private NodePlayerView nodePlayerView;
         private NodePlayer nodePlayer;
         private boolean firstTouch = false;
-        private long  lastClickTime = 0;
-        private static final long DOUBLE_CLICK_TIME_DELTA = 300;//milliseconds
+        private long lastClickTime = 0;
+        private static final long DOUBLE_CLICK_TIME_DELTA = 500;//milliseconds
 
 
         @SuppressLint("ClickableViewAccessibility")
@@ -142,7 +144,6 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             nodePlayer.setVideoEnable(true);
             nodePlayer.setBufferTime(10);
             nodePlayer.setMaxBufferTime(0);
-            nodePlayerView.setVideoSize(mItemWidth,mItemHeight);
             //nodePlayerView.setVisibility(View.INVISIBLE);
 
 
@@ -155,9 +156,14 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     @Override
     public NodePlayAdapter.RecycleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_nodeview, parent, false);
-        Log.d(TAG,"onCreateViewHolder begin");
-        view.getLayoutParams().width = mItemWidth;
-        view.getLayoutParams().height = mItemHeight;
+        Log.d(TAG, "onCreateViewHolder begin");
+//        view.getLayoutParams().width = mItemWidth;
+//        view.getLayoutParams().height = mItemHeight;
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = parent.getMeasuredHeight() / mShowRow;
+        layoutParams.width = parent.getMeasuredWidth() / mShowCol;
+        view.setLayoutParams(layoutParams);
+
         return new RecycleViewHolder(view);
     }
 
@@ -166,34 +172,31 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     @Override
     public void onBindViewHolder(@NonNull final NodePlayAdapter.RecycleViewHolder holder, final int position) {
 
-        Log.d(TAG,"onBindViewHolder begin");
+        Log.d(TAG, "onBindViewHolder begin");
 
 
-        if (!mViewHolderMap.containsKey(position))
-        {
-            mViewHolderMap.put(position,holder);
+        if (!mViewHolderMap.containsKey(position)) {
+            mViewHolderMap.put(position, holder);
         }
 
         holder.nodePlayerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Log.d(TAG, "onClick begin");
                 if (!holder.firstTouch) {
                     holder.firstTouch = true;
                     holder.lastClickTime = System.currentTimeMillis();
-                }
-                else {
+                } else {
                     long nowClickTime = System.currentTimeMillis();
-                    if (nowClickTime - holder.lastClickTime < RecycleViewHolder.DOUBLE_CLICK_TIME_DELTA) {
+                    long timeDiff = nowClickTime - holder.lastClickTime;
+                    if (timeDiff < RecycleViewHolder.DOUBLE_CLICK_TIME_DELTA) {
                         //double click event
-                        holder.firstTouch = false;
-                        Toast.makeText(mContext,"双击了View"+position,Toast.LENGTH_SHORT).show();
                         if (mItemDbClickListener != null) {
-                            mItemDbClickListener.onItemDoubleClick(v,position);
-
-
+                            mItemDbClickListener.onItemDoubleClick(v, position);
+                        }
                     }
-                }
+                    holder.firstTouch = false;
 
                 }
 
@@ -210,7 +213,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
 
 
     public void startPlayerAll() {
-        for(Integer key : mViewHolderMap.keySet()){
+        for (Integer key : mViewHolderMap.keySet()) {
 
             mViewHolderMap.get(key).nodePlayer.start();
 
@@ -218,15 +221,12 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     }
 
     public void startAnotherAct() {
-        try
-        {
+        try {
             //startActivity(new Intent("com.AndroidTest.SecondActivity"));//隐式intent
             Intent intent = new Intent(mContext, SecondActivity.class);//显示intent
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             // 显示异常信息
             Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -248,9 +248,9 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         }
     }
 
-    public void enterFullMode(View v,int position) {
+    public void enterFullMode(View v, int position) {
 
-        for(Integer key : mViewHolderMap.keySet()){
+        for (Integer key : mViewHolderMap.keySet()) {
             if (key != position) {
                 //mViewHolderMap.get(key).nodePlayerView.setVisibility(View.INVISIBLE);
             }
@@ -258,36 +258,33 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         }
     }
 
-    public void exitFullMode(View v,int position) {
+    public void exitFullMode(View v, int position) {
 
-        for(Integer key : mViewHolderMap.keySet()){
+        for (Integer key : mViewHolderMap.keySet()) {
 
             //mViewHolderMap.get(key).nodePlayerView.setVisibility(View.VISIBLE);
         }
 
     }
 
-    public void puaseALl()
-    {
-        for(Integer key : mViewHolderMap.keySet()){
+    public void puaseALl() {
+        for (Integer key : mViewHolderMap.keySet()) {
 
             mViewHolderMap.get(key).nodePlayer.pause();
 
         }
     }
 
-    public void stopALl()
-    {
-        for(Integer key : mViewHolderMap.keySet()){
+    public void stopALl() {
+        for (Integer key : mViewHolderMap.keySet()) {
 
             mViewHolderMap.get(key).nodePlayer.stop();
 
         }
     }
 
-    public void realeaseAll()
-    {
-        for(Integer key : mViewHolderMap.keySet()){
+    public void realeaseAll() {
+        for (Integer key : mViewHolderMap.keySet()) {
 
             mViewHolderMap.get(key).nodePlayer.release();
 
