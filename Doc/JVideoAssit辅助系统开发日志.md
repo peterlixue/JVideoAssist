@@ -1661,10 +1661,36 @@
 - 程序起来后,如何指导所有适配器数据初始化完成,数据控件加载完成,然后开始播放视频呢
 
   - Android – 如何知道RecyclerView何时完成放置项目？
+
   - http://www.voidcn.com/article/p-ssenvgvy-buz.html
+
   - 如何判断recyclerView刷新数据是否加载完毕？
+
     - recyclerView刷新数据：不管是添加项目，还是删除项目，还是notifychange完全重构列表。最终都应该会引起layout的改变，当layout完毕时，大概也就是题主说的“刷新数据加载完毕时？”如果是这样的话，很简单：recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(this);
     - getViewTreeObserver（）是个View对象通用的流程监视器，可以添加包括上面的各种状态监视。链接：https://www.zhihu.com/question/61971467/answer/193540885
     - 我加到这个逻辑到程序里面后,由于视频的播放,经常导致持续调用这个事件,一直提示,加载完成.估计是视频的画面一直在调整.
+
   - 再试试这个,适配器的数据事件, Android 监听RecyclerView内部数据变化
+
     - https://blog.csdn.net/qq569699973/article/details/104911212
+
+  - *******,5星, 最后通过在Adapter里面设置onViewAttachedToWindows监听视图是否创建绑定到recycleview里面, 根据个数,最后调用FragVideo的启动播放的回调接口,完成软件启动后,等配置数据加载完成,自动开始所有的视频画面的播放.
+
+    ```java
+     @Override
+        public void onViewAttachedToWindow(@NonNull RecycleViewHolder holder) {
+            super.onViewAttachedToWindow(holder);
+            Log.d(TAG,"RecycleViewHolder:" + holder + "添加到视图");
+            if (mViewHolderMap.size() >= mPlayUrlMap.size()) {
+                if (mItemDbClickListener != null) {
+                    mItemDbClickListener.onStartPlay();
+                }
+            }
+        }
+    ```
+
+    完成了功能, 每一个viewhoder创建,都会调用这个消息通知
+
+    
+
+  - 
