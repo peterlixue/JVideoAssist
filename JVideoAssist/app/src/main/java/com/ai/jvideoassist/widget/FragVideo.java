@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -44,6 +45,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
     private HashMap<Integer, String> mPlayUrls;
     private NodePlayAdapter mRecycleAdapter;
     private boolean mFullScreenMode;
+    private boolean mFirstPlay = true;
 
     private RecyclerView mFullRecView;
     private HashMap<Integer, String> mFullUrls;
@@ -62,6 +64,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
 
         mContext = view.getContext();
         recyclerView = view.findViewById(R.id.video_recycle_view);
+        //recyclerView.getViewTreeObserver().addOnGlobalLayoutListener
 
         //gridlayout setting
         GridLayoutManager gridLayoutManagerCol = new GridLayoutManager(mContext, ShowCol);
@@ -120,6 +123,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
 
         super.onResume();
         Log.d(TAG, " onResume");
+
     }
 
     @Override
@@ -186,6 +190,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         Log.d(TAG, "bindViewAdapter");
 
         mRecycleAdapter = new NodePlayAdapter(mPlayUrls, mContext);
+
         //计算item中的宽高
         mRecycleAdapter.init(ShowRow, ShowCol);
         recyclerView.setAdapter(mRecycleAdapter);
@@ -203,6 +208,18 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
                 Toast.makeText(mContext,",进入全屏,双击了View"+position,Toast.LENGTH_SHORT).show();
                 enterFullMode(view,position);
                 mFullScreenMode = true;
+            }
+
+            @Override
+            public void onStartPlay() {
+                if (mFirstPlay)
+                {
+                    if (mRecycleAdapter.bindDataCount() >= mPlayUrls.size())
+                    {
+                        mRecycleAdapter.startPlayerAll();
+                        mFirstPlay = false;
+                    }
+                }
             }
         });
 
@@ -222,6 +239,11 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
                 Toast.makeText(mContext,"退出全屏,双击了View"+position,Toast.LENGTH_SHORT).show();
                 exitFullMode(view,position);
                 mFullScreenMode = false;
+
+            }
+
+            @Override
+            public void onStartPlay() {
 
             }
         });

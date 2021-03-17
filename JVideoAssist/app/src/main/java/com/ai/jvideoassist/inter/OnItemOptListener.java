@@ -10,6 +10,8 @@ public interface OnItemOptListener {
     void onItemTouch(View view, int position);
 
     void onItemDoubleClick(View view,int position);
+
+    void onStartPlay();
 }
 
 

@@ -1657,3 +1657,14 @@
   - https://blog.csdn.net/hdhhd/article/details/109810121
   - 前面的工程项目配置和语音识别差不多，但是需要从SDK的res文件夹中复制ivw文件夹粘贴到main下面
   - https://blog.csdn.net/TZYZlpx123456789/article/details/80839009?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242
+
+- 程序起来后,如何指导所有适配器数据初始化完成,数据控件加载完成,然后开始播放视频呢
+
+  - Android – 如何知道RecyclerView何时完成放置项目？
+  - http://www.voidcn.com/article/p-ssenvgvy-buz.html
+  - 如何判断recyclerView刷新数据是否加载完毕？
+    - recyclerView刷新数据：不管是添加项目，还是删除项目，还是notifychange完全重构列表。最终都应该会引起layout的改变，当layout完毕时，大概也就是题主说的“刷新数据加载完毕时？”如果是这样的话，很简单：recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+    - getViewTreeObserver（）是个View对象通用的流程监视器，可以添加包括上面的各种状态监视。链接：https://www.zhihu.com/question/61971467/answer/193540885
+    - 我加到这个逻辑到程序里面后,由于视频的播放,经常导致持续调用这个事件,一直提示,加载完成.估计是视频的画面一直在调整.
+  - 再试试这个,适配器的数据事件, Android 监听RecyclerView内部数据变化
+    - https://blog.csdn.net/qq569699973/article/details/104911212

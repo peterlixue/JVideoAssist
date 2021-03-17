@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        Log.d(TAG, "checkedId: " + checkedId);
+
         switch (checkedId) {
             case R.id.rb_video:
                 mVpager.setCurrentItem(PAGE_ONE);

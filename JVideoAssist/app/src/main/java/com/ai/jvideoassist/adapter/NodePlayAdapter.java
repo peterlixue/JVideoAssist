@@ -212,6 +212,17 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         return mPlayUrlMap.size();
     }
 
+    @Override
+    public void onViewAttachedToWindow(@NonNull RecycleViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        Log.d(TAG,"RecycleViewHolder:" + holder + "添加到视图");
+        if (mViewHolderMap.size() >= mPlayUrlMap.size()) {
+            if (mItemDbClickListener != null) {
+                mItemDbClickListener.onStartPlay();
+            }
+        }
+    }
+
     public static String getURLFromPosition(int videoIndex) {
 
         String tempUrl = "";
@@ -307,6 +318,10 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         }
     }
 
+    public int bindDataCount()
+    {
+        return mViewHolderMap.size();
+    }
 
     public void puaseALl() {
         for (Integer key : mViewHolderMap.keySet()) {
