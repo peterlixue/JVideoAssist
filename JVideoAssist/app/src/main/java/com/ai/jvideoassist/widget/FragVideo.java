@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -16,18 +15,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ai.jvideoassist.R;
 import com.ai.jvideoassist.adapter.NodePlayAdapter;
+import com.ai.jvideoassist.config.AppConfig;
 import com.ai.jvideoassist.inter.IVideoIndex;
 import com.ai.jvideoassist.inter.OnItemOptListener;
-import com.ai.jvideoassist.R;
-import com.ai.jvideoassist.config.AppConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
-public class FragVideo extends Fragment implements FragSetting.SettingChangeCallBack{
+public class FragVideo extends Fragment implements FragSetting.SettingChangeCallBack {
 
     private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
@@ -87,7 +88,7 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
 
         mFullScreenMode = false;
         mFullRecView = view.findViewById(R.id.video_fullRecview);
-        mFullRecView.setLayoutManager(new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false));
+        mFullRecView.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
         mFullRecView.setVisibility(View.INVISIBLE);
         //data created
         mPlayUrls = new HashMap<>();
@@ -99,6 +100,8 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
 
         //bind view and adapter
         bindViewAdapter();
+
+        Toast.makeText(mContext, "获取视频播放数据中...", Toast.LENGTH_SHORT).show();
         //view.setVisibility(View.INVISIBLE);
         Log.d(TAG, " onCreateView over");
         return view;
@@ -149,14 +152,10 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         if (isVisibleToUser) {
             if (mFullScreenMode) {
                 mFullAdapter.startPlayerAll();
-            }
-            else
-            {
+            } else {
                 mRecycleAdapter.startPlayerAll();
             }
-        }
-        else
-        {
+        } else {
             mFullAdapter.puaseALl();
             mRecycleAdapter.puaseALl();
         }
@@ -205,26 +204,19 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
             public void onItemDoubleClick(View view, int position) {
 
                 // mRecycleAdapter.enterFullMode(view, position);
-                Toast.makeText(mContext,",进入全屏,双击了View"+position,Toast.LENGTH_SHORT).show();
-                enterFullMode(view,position);
+                Toast.makeText(mContext, ",进入全屏,双击了View" + position, Toast.LENGTH_SHORT).show();
+                enterFullMode(view, position);
                 mFullScreenMode = true;
             }
 
             @Override
             public void onStartPlay() {
-                if (mFirstPlay)
-                {
-                    if (mRecycleAdapter.bindDataCount() >= mPlayUrls.size())
-                    {
-                        mRecycleAdapter.startPlayerAll();
-                        mFirstPlay = false;
-                    }
-                }
+                delayStartPlay();
             }
         });
 
 
-        mFullAdapter = new NodePlayAdapter(mFullUrls,mContext);
+        mFullAdapter = new NodePlayAdapter(mFullUrls, mContext);
         mFullAdapter.init(1, 1);
         mFullRecView.setAdapter(mFullAdapter);
         mFullAdapter.setOnItemOptListener(new OnItemOptListener() {
@@ -236,8 +228,8 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
             @Override
             public void onItemDoubleClick(View view, int position) {
 
-                Toast.makeText(mContext,"退出全屏,双击了View"+position,Toast.LENGTH_SHORT).show();
-                exitFullMode(view,position);
+                Toast.makeText(mContext, "退出全屏,双击了View" + position, Toast.LENGTH_SHORT).show();
+                exitFullMode(view, position);
                 mFullScreenMode = false;
 
             }
@@ -249,13 +241,34 @@ public class FragVideo extends Fragment implements FragSetting.SettingChangeCall
         });
     }
 
+    private void delayStartPlay() {
+
+        Log.d(TAG,"启动延时播放...");
+        if (mFirstPlay) {
+            if (mRecycleAdapter.bindDataCount() >= mPlayUrls.size()) {
+
+                Timer timer = new Timer();
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        mRecycleAdapter.startPlayerAll();
+                    }
+                }, 2000);
+                mFirstPlay = false;
+            }
+        }
+
+
+    }
+
     public void enterFullMode(View v, int position) {
 
         mRecycleAdapter.puaseALl();
         recyclerView.setVisibility(View.INVISIBLE);
 
         mFullRecView.setVisibility(View.VISIBLE);
-        mFullAdapter.updatePlayUrl(0,NodePlayAdapter.getURLFromPosition(position));
+        mFullAdapter.updatePlayUrl(0, NodePlayAdapter.getURLFromPosition(position));
         mFullAdapter.startPlayerAll();
         Log.d(TAG, "enter enterFullMode");
 

@@ -1691,6 +1691,14 @@
 
     完成了功能, 每一个viewhoder创建,都会调用这个消息通知
 
-    
+  ---
 
-  - 
+  2021年03月18日08:58:45
+  
+  - java 延时的几种方法方法
+    - https://www.cnblogs.com/jiangfeilong/p/10494414.html
+    - Timer
+    - new Thread sleep
+    - Robot, delay
+    - Timer类,schedule.TimeTask
+    - 用concurrent包的TimeUnit类延时sleep()方法延时
