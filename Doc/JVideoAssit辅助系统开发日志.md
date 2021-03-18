@@ -1702,3 +1702,13 @@
     - Robot, delay
     - Timer类,schedule.TimeTask
     - 用concurrent包的TimeUnit类延时sleep()方法延时
+  
+- 自己开发的安卓APP怎么发布？
+
+  - 首先打开安卓市场官网，在右上角找到注册按钮，先注册成为开发者。例如应用宝是可以利用qq账号登陆的，就百阅重新的注册账号了/
+    在就是点击“开发者”进入“开发者中心”页面（也可从网页下方的“开发者入口”进入）。
+    选择“发布软件”选项，依
+  - 在android studio里创建一个签名文件，并使用它打包项目生成发布版APK安装包
+  - Android 签名打包
+    - https://blog.csdn.net/csdn_wlc/article/details/80573929
+    - Android 要求所有已安装的应用程序都使用数字证书做数字签名，数字证书的私钥由开发者持有
