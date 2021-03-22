@@ -1712,3 +1712,70 @@
   - Android 签名打包
     - https://blog.csdn.net/csdn_wlc/article/details/80573929
     - Android 要求所有已安装的应用程序都使用数字证书做数字签名，数字证书的私钥由开发者持有
+
+---
+
+2021年03月19日10:44:16
+
+- 找到一个好东西, 特别是针对c/C++, 包括QT, 源码分析和浏览网站
+
+- https://code.woboq.org/
+
+- ### Browse Open Source Projects
+
+  → Browse the source code of [Qt](https://code.woboq.org/qt5/) | [GLibc](https://code.woboq.org/userspace/glibc/) | [LLVM](https://code.woboq.org/llvm/) | [Boost](https://code.woboq.org/boost/boost/) | [GCC](https://code.woboq.org/gcc/) | [Linux](https://code.woboq.org/linux/linux/)
+
+- 可以编程的时候,查看类或者函数的定义, 然后可一查看源码里面具体的实现细节. 对掌握源码知识非常有帮助
+
+- 如果有类图结构展示就更好了
+
+- https://code.woboq.org/qt5/   qt5的源码,类,函数说明,
+
+  - 是这个哥们在讲源码阅读的时候, 提到的方法,感谢
+  - 利用doxygen扫描Qt的源码
+  - 我先是利用doxygen扫描Qt的源码（这里默认已经添加了Qt Src组件），生成一份.chm的帮助手册。
+    这个做法的优点是，可以即时查看源码，查看类图，比如想用到QImage类，那直接索引QImage，查看API，查看实现，查看继承关系，相类似的类等等，是一种将实践工作与学习结合在一起的方法
+    原文链接：https://blog.csdn.net/Alezan/article/details/104558673
+
+- Qt查看源码总结帖
+
+  - https://blog.csdn.net/Alezan/article/details/104558673
+  - 讲了了下载源码和pdb文件,在qtcreator和visual studio里面如何配置源码路径和pdb符号文件路径,然后进入源码,观察实现
+  - 讲到了源码浏览网址 woboq.org, 专门分析qt, linux, boost的源码
+  - 讲了调试进入源码观看,查看实现逻辑
+
+- Linux进程内存分析pmap命令
+
+  - ```
+      pmap [ -x | -d ] [ -q ] pids... 
+           pmap -V 
+    ```
+
+- 什么是RAII？
+
+  RAII是Resource Acquisition Is Initialization（wiki上面翻译成 “资源获取就是初始化”）的简称，是C++语言的一种管理资源、避免泄漏的惯用法。利用的就是C++构造的对象最终会被销毁的原则。RAII的做法是使用一个对象，在其构造时获取对应的资源，在对象生命期内控制对资源的访问，使之始终保持有效，最后在对象析构的时候，释放构造时获取的资源。
+  原文链接：https://blog.csdn.net/quinta_2018_01_09/article/details/93638251
+
+- C++RAII机制
+
+  - https://blog.csdn.net/quinta_2018_01_09/article/details/93638251
+
+  - ```
+    使用d-pointer的目的：
+    实现二进制兼容，头文件与实现细节无关。Qt started out closed source？
+    
+    二进制兼容：即Qt（dll）版本的更新替换不会影响应用程序exe。因为Qt的接口类（QObject等）的实例的大小是固定的。
+    
+    在Qt中，QObject，QWidget，QLabel这些都是接口类，真正的实现在QObjectPrivate，QWidgetPrivate，QLabelPrivate 等Private类中。
+    ```
+
+
+
+Qt 信号和槽源码分析
+
+- https://segmentfault.com/a/1190000020241190
+
+QtCreator源码分析（一）——QtCreator源码简介
+
+- https://blog.51cto.com/9291927/2093779  最近就紧跟这个学习吧
+- 
