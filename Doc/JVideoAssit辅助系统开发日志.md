@@ -454,12 +454,13 @@
 
   - 开源的视频播放项目 
     - https://github.com/bilibili/ijkplayer
-    - 
+    - ExoPlayer项目地址：https://github.com/google/ExoPlayer
+    - 饺子饺子播放器开源地址：https://github.com/lipangit/JiaoZiVideoPlayer
 
 - 使用RecyclerView和SurfaceView实现视频播放
 
   - https://blog.csdn.net/wang927893/article/details/78860735?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-2&spm=1001.2101.3001.4242
-  - 这个参考原理，recycleview的用法
+  - 这个我参考原理，recycleview的用法, 实现了本地视频的播放, 播放的相关视频信息显示,预览界面
 
 - Android利用SurfaceView显示Camera图像爬坑记（一）
 
@@ -666,6 +667,7 @@
 
   - https://blog.csdn.net/sinat_28864443/article/details/97148265
   - Fragment有`11个生命周期`， Activity有7个生命周期
+  - Fragment有11个生命周期：onAttach() --->onCreate() --->onCreateView() --->onActivityCreate() --->onStart() --->onResume() --->onPause() --->onStop() --->onDestroyView() --->onDestroy() --->onDetach();
 
 - 我的手机开发后，动态检测授予权限后，终于可以在Android 10的分区存储，利用MediaStore访问到对应目录的视频文件进行播放了， 但是有一个视频播放报错，很短7秒钟
 
@@ -766,13 +768,31 @@
 
   - https://q.cnblogs.com/q/78341/   这个最靠谱，讲了各种方法，viewPager容器里面设置选项，禁止销毁fragment，自动缓存fragment界面。
 
-  - 可以切换的时候，自己实现hide或者show; 可以设置缓存，可以自己实现缓存。
+  - 可以切换的时候，自己实现hide或者show; 可以设置缓存，可以自己实现缓存
+
+  - 通过FragmentManager开启事务，然后调用hide方法隐藏Fragment，再次切换到之前的Fragment时再调用show方法显示出来，这样可以避免Fragment的往复创建和销毁
 
   - ```
     mViewPager.setOffscreenPageLimit(5);  这个是有效的，4个页面全部缓存成功。
     ```
 
   - https://blog.csdn.net/weixin_33787529/article/details/94472152
+
+  - ViewPager之setOffscreenPageLimit()解析
+
+    - https://blog.csdn.net/maxiaowen_2017/article/details/81280297
+
+    - ```
+       @Override
+          public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+              super.onActivityCreated(savedInstanceState);
+       
+              isViewInitFinished = true;
+          }
+        
+      ```
+
+      
 
 - 获取android的实时网速
 
@@ -983,15 +1003,26 @@
     - ![å¤è·¯RTSP/RTMPè½¬RTMPæ¨éSDKæ¦è§å¾](https://camo.githubusercontent.com/41b5955f60084708a7a221382b5818d35b4255f075ff3949dc6ac5bc8cad9a11/687474703a2f2f64616e697573646b2e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30312f64616e69756c6976655f72656c617973646b5f32303230303133302e706e67)
     - 图片来源
 
-###### 7. RTSP流媒体服务器的技术实现或者流媒体推流分发的实现
+###### 7. RTMP流媒体服务器的技术实现或者流媒体推流分发的实现
 
 - srs
 - nginx+rtsp/rtmp-module/http-module
 - CDN
-- ffserver
-- EasyDarWin
+- ffserver   以前是和ffmpeg一起安装的服务, 后面被2018版本移除了,选型时候考虑 
+  - https://blog.csdn.net/cug_heshun2013/article/details/79518632?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&spm=1001.2101.3001.4242
+- EasyDarWin  开源国产RTSP/RTMP流媒体服务和其他播放编解码控件
+  - http://www.easydarwin.org/
 - Wowza
+  - wowza也是商用级收费产品，参考价在3-4万。
 - android 原生的MediaCodeC编码解码
+- VideoLAN的VLC
+- Live555流媒体
+
+
+
+开源流媒体服务器：为何一定得再撸个新的
+
+​	https://cloud.tencent.com/developer/article/1638383
 
 
 
@@ -1063,7 +1094,7 @@
 - 2020最新RTMP+HTTP+RTSP直播地址汇总（亲测可用）
   - https://willarun365.blog.csdn.net/article/details/109180771
   - 用VLC打开,网络流,可以看到视频,自己测试过CCTV1的RTSP流
-- 设计NodePlayerAdapter,使用播放开源NodePlayer插件,可以同时播放4路RTSP, 画面不卡顿
+- 设计NodePlayerAdapter,使用播放开源NodePlayer插件,可以同时播放4路RTMP, 画面不卡顿
 - 4副图片直接有1-2秒内的不同步
 
 ---
@@ -1354,7 +1385,7 @@
 
   - ffmpeg 采集相机数据生成本地视频文件
 
-     `ffmpeg -f video4linux2 -r 30 -s 640x480 -i /dev/video0 output_video.avi`
+     `ffmpeg -f video4linux2 -r 30 -s 640x480 -i /dev/video0 output_4video.avi`
 
     `ffmpeg -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 output_data.mkv`
 
@@ -1368,7 +1399,7 @@
 
   - 网上研究记录
 
-    - linux FFMPEG 摄像头采集数据推流 https://www.cnblogs.com/enumx/p/12346711.html  最新的成功,比较全
+    - linux FFMPEG 摄像头采集数据推流 https://www.cnblogs.com/enumx/p/12346711.html  最新的成果,比较全
     - 国外写的,https://www.scivision.dev/youtube-live-ffmpeg-livestream/,  命令很全
     - FFmpeg Live stream via Python PyLivestream
 
@@ -1378,9 +1409,35 @@
 
     ```shell
     ffmpeg -r 30  -i /dev/video0 -vcodec h264 -max_delay 100 -f flv -g 5 -b 700000 rtmp://192.168.1.101/live/test
-    ```
-
+    //-bf B帧数目控制，-g 关键帧间隔控制，-s 分辨率控制
+  ```
+  
   - 用ffmpeg采集本机USB相机,形成RTMP流,推送给SRS服务端,再本机VLC拉流播放,延时就比较大, 10秒延时级别+卡顿.
+  
+  - -b 指定码率注意单位是bit/s,所以我们一般要加k,比如 -b 1000k 就是1000kb/s
+  
+    -g 设置组的大小
+  
+  - ffmpeg常用参数说明：https://blog.csdn.net/encoder1234/article/details/51743331
+  
+    主要参数： -i 设定输入流 -f 设定输出格式 -ss 开始时间 视频参数： -b 设定视频流量，默认为200Kbit/s -r 设定帧速率，默认为25 -s 设定画面的宽与高 -aspect 设定画面的比例 -vn 不处理视频 -vcodec 设定视频编解码器，未设定时则使用与输入流相同的编解码器 音频参数： -ar 设定采样率 -ac 设定声音的Channel数 -acodec 设定声音编解码器，未设定时则使用与输入流相同的编解码器 -an 不处理音频
+  
+    - GDIGrab用于在Windows下屏幕录像(抓屏)
+  
+    - 使用ffmpeg录像屏幕, Linux下的屏幕录像, -vd x11
+      ffmpeg -vcodec mpeg4 -b 1000 -r 10 -g 300 -vd x11:0,0 -s 1024x768 ~/test.avi
+  
+    - 上面测试出错,下面这个抓取是成功的命令
+  
+      ```
+      ffmpeg -f x11grab -r 25 -s 800x600 -i :0.0 out.mp4
+      ```
+  
+      –enable-x11grab	enable X11 grabbing (legacy) [no]
+  
+      需要ffmpeg配置编译选项,支持X11 设备的截屏
+  
+    - 
   
   ---
   
