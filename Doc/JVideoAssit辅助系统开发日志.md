@@ -1410,6 +1410,7 @@
     ```shell
     ffmpeg -r 30  -i /dev/video0 -vcodec h264 -max_delay 100 -f flv -g 5 -b 700000 rtmp://192.168.1.101/live/test
     //-bf B帧数目控制，-g 关键帧间隔控制，-s 分辨率控制
+    ```
   ```
   
   - 用ffmpeg采集本机USB相机,形成RTMP流,推送给SRS服务端,再本机VLC拉流播放,延时就比较大, 10秒延时级别+卡顿.
@@ -1429,15 +1430,13 @@
   
     - 上面测试出错,下面这个抓取是成功的命令
   
-      ```
+  ```
       ffmpeg -f x11grab -r 25 -s 800x600 -i :0.0 out.mp4
       ```
-  
+      
       –enable-x11grab	enable X11 grabbing (legacy) [no]
-  
+      
       需要ffmpeg配置编译选项,支持X11 设备的截屏
-  
-    - 
   
   ---
   
@@ -1477,6 +1476,10 @@
     - 可能是自己机器里面有nginx-rtmp-module配置,直接就可以进行rtmp的推流服务.
     - 需要在新机器验证
   
+- 本机服务器创建了一个推流脚本, startCameraRTMP.sh
+
+  
+
 - 下一步解决嵌入式ARM处理设备上面的,视频推流就可以. 还可以参考srs中的低延时方案,来进行视频流的分发传输.
 
 - 手机客户端用了第三方的sdk,可以再使用其他的哔哩哔哩bilibili的客户端看看, NodeMediaPlayer这个是不支持rtsp, 然后感觉不是很稳.
@@ -1585,36 +1588,37 @@
       原文链接：https://blog.csdn.net/zhangyuejf/article/details/109049392
     
   - 科大讯飞语音唤醒(Android)
-  
+
     - https://blog.csdn.net/hdhhd/article/details/109810121
     - https://console.xfyun.cn/services/awaken  平台唤醒词语设置,sdk下载
-  
+
   - Android ListView以及RecyclerView里面 监听Item可见以及不可见的状态
-  
+
     - https://blog.csdn.net/huazai30000/article/details/88361440
     - 这个通常是打点的需求。 打省略号....
+    - https://github.com/xuhuawei131/RecyclerViewItemVisible
     
   - Android 超好用的播放器——ijkplayer
-  
+
     - https://www.jianshu.com/p/c5d972ab0309
     - Android基于ijkplayer的 RTSP视频播放器简易实现（20200923）
     - https://blog.csdn.net/weixin_42651184/article/details/108755895?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
     - **https://github.com/wenyuanw/Android_Ijkplayer_app**
     - Android开发-基于ijkplayer框架开发网络电视直播播放器的实现
       - https://blog.csdn.net/fukaimei/article/details/80553709?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
-  
+
   - Android视频直播的实现
-  
+
     - https://blog.csdn.net/huaxun66/article/details/53427771?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control  清晰讲解
-  
+
   - 使用RecyclerView结合jiaozivideoplayer去加载不同类型的布局
-  
+
     - https://blog.csdn.net/asjqkkkk/article/details/78489245 
     - 布局内容丰富, 又告诉如何使用recycleview的教程,浅显易懂.
     - https://github.com/asjqkkkk/MySimpleNews  必须看看这个设计实现, 播放器,图片,点击效果,全屏,退出全屏
-  
+
   - https://gitee.com/tcy0206/dkplayer  基于IjkPlayer的视频播放器，支持直播点播，悬浮窗播放，广告播放，边播边缓存；支持重力感应自动全屏；完美实现ListView和RecyclerView列表播放；支持清晰度切换；支持一行代码切换MediaPlayer和ExoPlayer；模仿抖音效果demo；Android O PiP demo
-  
+
   - 
 
 - OA电脑系统中,rar分块压缩一个大于10M的文件, 才能传输给其他人
@@ -1826,7 +1830,7 @@
     在Qt中，QObject，QWidget，QLabel这些都是接口类，真正的实现在QObjectPrivate，QWidgetPrivate，QLabelPrivate 等Private类中。
     ```
 
-
+- C++标准库为互斥量提供了一个RAII语法的模板类std::lock_guard
 
 Qt 信号和槽源码分析
 
