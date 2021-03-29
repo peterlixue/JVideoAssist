@@ -812,6 +812,36 @@
 
 - 使用mjpeg-stream作为开发电脑的图片流媒体服务器，Android手机端，基于webview去显示url的stream流，实现成功。 本机无线局域网测试实时性较高，偶尔画面跳转刷新。
 
+- ubuntu 安装使用 mjpg-streamer
+
+  - https://blog.csdn.net/yytyu2017/article/details/108937708
+
+  ```
+  ./mjpg_streamer -i "./input_uvc.so -d /dev/video0 -u -f 30" -o "./output_http.so -w ./www"
+  ```
+
+  - https://www.cnblogs.com/sirius-swu/p/6815840.html
+  - 树莓派 之 USB摄像头 局域网内视频流实时传输（ MJPG-Streamer）
+    - https://blog.csdn.net/weixin_40639095/article/details/112603303
+
+- 树莓派下mjpg-streamer 挂载多个USB摄像头
+
+  - https://blog.csdn.net/jacka654321/article/details/80724132?utm_medium=distribute.pc_relevant_bbs_down.none-task--2~all~first_rank_v2~rank_v29-2.nonecase&depth_1-utm_source=distribute.pc_relevant_bbs_down.none-task--2~all~first_rank_v2~rank_v29-2.nonecase
+
+    ```
+    nohup ./mjpg_streamer -i "input_uvc.so -d /dev/video2 " -o "output_http.so -w ./www -p 8003" &
+    nohup ./mjpg_streamer -i "input_uvc.so -d /dev/video1 " -o "output_http.so -w ./www -p 8002"&
+    ```
+
+    后台执行,启用不同端口,进行服务就可以了.
+
+  - 作者我想问以下为什么在每次把usb摄像头拔了又重新插上，再使用ls -al /dev/ | grep video 显示的video的名字会有些变动啊
+    一方世界回复VITTO7777: 因为usb port 是`按插入的顺序来编号的`，所以我们可以根据设备的插入顺序来控制我们代码中使用哪个usb
+
+- 树莓派采用MJPG-Streamer双摄推流至上位机,实测延时低至200ms[CSI摄像头+USB摄像头]
+
+  - https://blog.csdn.net/qq_39492932/article/details/84671345
+
 - mjpg-streamer安卓APP 参考这个来实现我的程序
 
   - https://blog.csdn.net/mm13420109325/article/details/88325148
@@ -835,7 +865,98 @@
      sudo iftop -i wlp7s0 -B -P
     ```
     
+  
+- 720p, 1080p的常规分辨率大小
+
+  - 640*480
+  - 1280x720
+  - 1920×1080
+
+- linux shell启动多个进程的注意事项
+
+  - ```
+    启动多进程时，一定注意在长时间运行进程后添加 &或者nohup，将进程托管给后台，但是这两个命令是有区别的。
     
+    nohup在当前shell进程被终止后，可以继续在后台运行，而&在shell退出后也会退出。这是网上的说法，我测试使用nohup会阻塞后边程序，需要加&才能顺序启动进程，nohup只有将输出存储到nohup.out的功能而已当我结束shell之后，进程会退出，并不会保留在后台。
+    
+    例如编写一个test.sh程序：
+    unset DISPLAY
+    export DISPLAY=:0
+    mkfifo $(pwd)/cmd_fifo
+    mplayer ( p w d ) / s a n d s t a r . m p 4 − l o o p 0 − f s − q u i e t − s l a v e − i n p u t f i l e = (pwd)/sandstar.mp4 -loop 0 -fs -quiet -slave -input file= (pwd)/sandstar.mp4−loop0−fs−quiet−slave−inputfile=(pwd)/cmd_fifo &
+    #mplayer ./sandstar.mp4 -loop 0 -fs -slave -quiet # -input file=/home/nx3/Downloads/mplayer_setup/cmd_fifo
+    $(pwd)/playerctrl
+    
+    这是一个启动mplayer播放的后台程序后，再启动一个控制进程，当退出playerctrl后，由于此shell进程退出，mplayer也会终止，添加nohup并不会在后台保留mplayer进程。
+    ————————————————
+    版权声明：本文为CSDN博主「u012441962」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+    原文链接：https://blog.csdn.net/u012441962/article/details/113121435
+    ```
+
+    shell多个后台进程,启动和退出,是否同时结束,还是会在后台继续执行. 
+
+    https://blog.csdn.net/u012441962/article/details/113121435
+
+  - jobs  
+
+  - Linux shell执行一次执行多个命令
+
+    - https://blog.csdn.net/qq_27870421/article/details/94598266?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control   **第一种是以分号（；）进行划分：** **命令之间&&隔开**   **每个命令之间用||隔开**
+
+  - Linux系统把程序放后台运行，后台执行不退出，退出终端仍运行进程，继续运行（centos & nohup jobs）
+
+    - https://blog.csdn.net/envon123/article/details/82144401
+
+    - 程序在后台运行了，但退出当前会话，发现程序还是停止了，此时要用nohup命令，如：nohup php test.php >/dev/null 2>&1 
+
+      6、使用nohup后，应确保用exit命令退出当前账户，非常正常退出或结束当前会话，在后台运行的作业也会终止
+
+    - 是终命令可能是：nohup php test.php >/dev/null 2>&1 &
+
+  - https://www.jianshu.com/p/747e0d5021a2?from=timeline
+
+  - 原因是testshell0.sh是以后台任务的方式由testshell1.sh提交，当testshell1.sh已经退出后，testshell0.sh变成了孤儿进程，操作系统自动收集这些孤儿进程，此时我们看到testshell0.sh的父进程已经变成进程号1了，这样testshell0.sh和当前终端已经没有了关系，他们失去了联系，从而当当前终端结束的时候，testshell0.sh不会也不需要得到什么消息，那么也就不会收到SIGHUP信号了。
+
+    作者：CodingCode
+    链接：https://www.jianshu.com/p/747e0d5021a2
+    来源：简书
+    著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+- Shell echo命令：输出字符串
+
+  - http://c.biancheng.net/view/1142.html
+  - echo "读者，你好！"  #直接输出字符串
+    echo $url  #输出变量
+    echo "${name}的网址是：${url}"  #双引号包围的字符串中可以解析变量
+    echo '${name}的网址是：${url}'  #单引号包围的字符串中不能解析变量
+
+- 测试结论, nohup可以在停止当前主shell进程后, 自动停止所有对应启动的后台子进程. 但是输出在屏幕看不到了
+
+- linux nohup和&后台运行，进程查看及终止
+
+  - ​	https://blog.csdn.net/ninisui/article/details/77989938
+
+  - 这个挺好的,用起来监控进程的运行情况
+
+  - 包括网络端口,名称,pid
+
+  - jobs命令只看当前终端生效的，关闭终端后，在另一个终端jobs已经无法看到后台跑得程序了，此时利用ps（进程查看命令
+
+  - 用ps -def | grep查找进程很方便，最后一行总是会grep自己
+
+    　　用grep -v参数可以将grep命令排除掉
+
+    
+
+    ```
+    ps -aux|grep chat.js| grep -v grep
+    ps -aux|grep chat.js| grep -v grep | awk  '{print $2}'
+    ```
+
+    强制终止进程
+    使用kill命令强制重启进程
+
+    [root@localhost ~]# ps -ef|grep mongo|grep -v grep|awk '{print $2}'|xargs kill -9 
 
 ---
 
@@ -1368,7 +1489,7 @@
             -f flv -y rtmp://192.168.1.101/live/livestream; \
             sleep 1; \
         done
-    
+    # -re这个选项会将输入的读取速度降低到输入的本地帧速率。它对于实时输出(例如直播流)很有用
     ```
 
     chmod +x testFFmpegPush.sh 赋予运行权限.
@@ -1475,10 +1596,18 @@
   
     - 可能是自己机器里面有nginx-rtmp-module配置,直接就可以进行rtmp的推流服务.
     - 需要在新机器验证
+    
+  - 设置ultrafast参数 ffmpeg命令行: 
+    $ ./ffmpeg -i rtmp://192.168.1.12/live/src -vcodec libx264 -preset ultrafast -b:v 400k -s 720x576 -r 25  
+  
+  - ffmpeg的转码延时测试与设置优化
+  
+    - https://blog.csdn.net/wishfly/article/details/51911264
   
 - 本机服务器创建了一个推流脚本, startCameraRTMP.sh
 
-  
+  - 确实使用在线秒表, 以及摄像头拍照当前秒表数据和在线秒表数据, 用截屏软件截取某一个时刻的图像,观察拍摄画面数据,和在线秒表数据,得出现实的延迟情况. 大概170ms, 对于mjpg-stream
+  - 
 
 - 下一步解决嵌入式ARM处理设备上面的,视频推流就可以. 还可以参考srs中的低延时方案,来进行视频流的分发传输.
 
@@ -1639,10 +1768,8 @@
     1. 通过fragment中brocastReceiver来通知activity刷新UI;
     2. 通过eventbus订阅者模式来通知Activity实时刷新UI;
     3. 通过fragment中编写接口设置监听器,然后在actvity中实现该接口,在接口方法中刷新UI即可
-    ————————————————
-    版权声明：本文为CSDN博主「水月沐风」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
     原文链接：https://blog.csdn.net/s1674521/article/details/78318525
-
+  
 - Android Fragment与Activity交互的几种方式
 
   - 这里我不再详细介绍那写比较常规的方式，例如静态变量，静态方法，持久化，application全局变量，收发广播等等。
@@ -1773,6 +1900,11 @@
   - Android 签名打包
     - https://blog.csdn.net/csdn_wlc/article/details/80573929
     - Android 要求所有已安装的应用程序都使用数字证书做数字签名，数字证书的私钥由开发者持有
+  
+- 服务端的程序部署
+
+  - 开发mjpg-stream推流脚本 形成start_all_video.sh和stop_all_video.sh, 脚本运行在安装的mjpg_steamer根目录下, 识别命令mjpg_streamer
+  - 开发srs_rtmp推流脚本 形成start_all_video.sh和stop_all_video.sh, 脚本运行在安装的mjpg_steamer根目录下, 识别命令mjpg_streamer
 
 ---
 
@@ -1839,4 +1971,9 @@ Qt 信号和槽源码分析
 QtCreator源码分析（一）——QtCreator源码简介
 
 - https://blog.51cto.com/9291927/2093779  最近就紧跟这个学习吧
-- 
+
+- vlc命令行大全
+  - https://blog.csdn.net/wupengqiangqinli/article/details/50728005
+  - vlc v4l2:// :v4l2-dev=/dev/video6
+  - vlc播放 vlc http://192.168.1.103:1024
+
