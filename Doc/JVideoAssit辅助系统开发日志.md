@@ -1475,6 +1475,14 @@
 
   - 运行服务  ./objs/srs -c ./conf/myrtmp.conf
 
+  - linux上执行命令，设置软链接到/usr/bin目录中
+
+    - ln -s 命令文件路径  /usr/bin
+
+      例如：ln -s  /usr/local/chaosblade-0.5.0/blade  /usr/bin
+
+      `使用ln 命令使用绝对路径`
+
   - 任何利用去年学习的ffmpeg进行推流,发现没有找到直接可靠的记录,自己平时记录的信息太过杂散,没有直接记录具体成功的过程.
 
   - 采用教程上面的命令,播放自带的flv视频,进行推流测试.
@@ -1501,6 +1509,11 @@
   - 然后在自己开发的Android JVideoAssit中,输入rtmp流媒体的地址, 使用NodeMediaPlay成功播放了rtmp流, 实时性比较高, 偶尔出现卡顿. 
 
   - 测试是在自己的实验室的wifi条件下,4路视频同时拉流播放.
+
+- 制作自动执行的脚本的时候, 建立不同目录下面命令的软连接:
+
+  - ln -s /home/lijuan/AndroidStudioProjects/openpro/srs/trunk/objs/srs  /usr/local/bin/srs  成功在命令环境下识别了srs
+  - 
 
 - 下一步,测试本机USB相机的推流,利用上半年研究记录的知识, 2020年10月26日 USB摄像头利用ffmpeg实现rtmp推流
 
@@ -1977,3 +1990,156 @@ QtCreator源码分析（一）——QtCreator源码简介
   - vlc v4l2:// :v4l2-dev=/dev/video6
   - vlc播放 vlc http://192.168.1.103:1024
 
+---
+
+2021年03月29日
+
+- 码率控制
+  码率控制对于在线视频比较重要。因为在线视频需要考虑其能提供的带宽。
+
+- 那么，什么是码率？很简单： bitrate = file size / duration
+
+  比如一个文件20.8M，时长1分钟，那么，码率就是：
+  biterate = 20.8M bit/60s = 20.8*1024*1024*8 bit/60s= 2831Kbps
+  一般音频的码率只有固定几种，比如是128Kbps， 那么，video的就是
+  video biterate = 2831Kbps -128Kbps = 2703Kbps。
+
+  说完背景了。好了，来说ffmpeg如何控制码率。 ffmpg控制码率有3种选择，-minrate -b:v -maxrate
+
+  `-b:v主要是控制平均码率`。 比如一个视频源的码率太高了，有10Mbps，文件太大，想把文件弄小一点，但是又不破坏分辨率。 ffmpeg -i input.mp4 -b:v 2000k output.mp4上面把码率从原码率转成2Mbps码率，这样其实也间接让文件变小了。目测接近一半。
+
+  不过，ffmpeg官方wiki比较建议，设置b:v时，同时加上 -bufsize
+  `-bufsize 用于设置码率控制缓冲器的大小，`设置的好处是，让整体的码率更趋近于希望的值，`减少波动。`（简单来说，比如1 2的平均值是1.5， 1.49 1.51 也是1.5, 当然是第二种比较好） ffmpeg -i input.mp4 -b:v 2000k -bufsize 2000k output.mp4
+
+  -minrate -maxrate就简单了，在线视频有时候，希望码率波动，不要超过一个阈值，可以设置maxrate。
+  ffmpeg -i input.mp4 -b:v 2000k -bufsize 2000k -maxrate 2500k output.mp4
+
+  链接：https://www.jianshu.com/p/ddafe46827b7
+
+- FFmpeg码率控制及内置编码参数介绍
+
+  - https://blog.csdn.net/DONGHONGBAI/article/details/84776431
+  - preset
+    主要调节编码速度和质量的平衡，有ultrafast
+  - tune
+    主要配合视频类型和视觉优化的参数况
+  - profile
+    H.264有四种画质级别,分别是baseline, extended, main, high
+  - 根据应用领域的不同，Baseline profile多应用于实时通信领域，Main profile多应用于流媒体领域，High profile则多应用于广电和存储领域。
+
+- linux部署安装SRS流媒体服务器教程
+
+  - https://blog.csdn.net/weixin_30892987/article/details/99430309?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.control
+
+- 使用 rm 和 unlink 命令就能完成移除（删除）符号链接的操作。
+
+  - https://www.linuxprobe.com/unlink-linux-symlink.html
+  - 刚才删除srs服务器的配置文件的时候,由于误用了rm -rf /usr/bin/trunk/* 将我本地目录AndroidStudioproject的原始文件也删除了 , 悲剧的有一逼.  谨慎使用rm -rf 根据解释是删除原来的文件
+  - 幸亏自己是在git目录下面的操作, 可以恢复源码文件, git st , git checkout
+  - rm -i symlinkdir
+  - unlink symlinkfile
+  - Linux 下如何创建 /删除软连接
+
+- 建立命令的软连接
+
+  - sudo ln -s objs/srs /usr/local/bin/
+  - sudo unlink/usr/local/bin/srs
+  
+- 在linux服务器上面多个视频无缝推流
+
+  - 一直在弄视频推流的直播服务，之前是用obs。但是成天开着电脑，很费电啊。恰好手里有闲置的服务器，想着能不能用linux来进行推流。
+    果断的找到了ffmpeg来推流，很不错。简单好用，但是我按照网上的循环推流命令，发现在多个文件推流的时候，循环用ffmpeg进程来进行推流断开的时候会造成画面卡顿与客户端浏览器重新加载的情况，很苦恼。。。
+
+    `在v2ex上面有幸找到了这个kplayer这个`，可以在linux上面完美实现无缝推流，支持配置文件进行个性化配置。很不错。特此推荐记录
+
+    附上链接： https://kplayer.bytelang.cn
+
+    原文链接：https://blog.csdn.net/qq_22779443/article/details/103432864
+
+-  基于srs直播群集架构之一路rtmp推流，多rtmp拉流
+
+  - https://blog.csdn.net/chengzengchi4787/article/details/101038531
+
+- 手把手教会你部署srs流媒体服务器,并管理查看它的启动运行
+
+  - 运行 ./objs/srs -c ./conf/myrtmp.conf 时候,用tail -f ./objs/srs_log.log查看日志,发现提示端口被使用,服务启动失败
+
+  - 通过命令 `sudo lsof -i:1935` 查看当前主机端口的占用, 看哪个进程正在使用这个进程,导致srs运行不了
+
+  - http://www.360doc.com/content/21/0314/06/71430804_966874273.shtml
+
+  - 利用lsof -i:1935查看,1935端口被nginx占用了.
+
+  - ffplay "rtmp url"
+
+  - ffplay播放器的nobuffer选项实现了几乎零延迟。没有它，播放器将引入2秒的预缓冲延迟。
+    例如：
+    ffplay -fflags nobuffer rtmp:192.168.1.245/live/audio
+
+  - 我将原来使用的测试配置文件的1935端口,改成1936了, 运行srs服务,成功执行
+
+    - ```
+      ./objs/srs -c ./conf/myrtmp.conf 
+      [2021-03-29 15:25:28.198][Trace][11392][0] XCORE-SRS/3.0.157(OuXuli)
+      [2021-03-29 15:25:28.198][Trace][11392][0] config parse complete
+      [2021-03-29 15:25:28.198][Trace][11392][0] you can check log by: tail -f ./objs/srs.log (@see https://github.com/ossrs/srs/wiki/v1_CN_SrsLog)
+      [2021-03-29 15:25:28.198][Trace][11392][0] please check SRS by: ./etc/init.d/srs status
+      ```
+
+    - nginx 服务stop后,ffmpeg推流到1935的话,就不能直接拉流,让ffplay播放了. 解释了以前的不经过srs能够播放视频的疑问
+
+  - 将所有的Vim字符串替换为vim字符串
+
+    1,$s/Vim/vim/gc 会出现提示”replace with foo(y/n/a/q/l/^E/^Y)?”，询问是否确认执行
+
+
+---
+
+2021年03月30日09:54:21
+
+- ffplay 播放 USB camera
+
+  - ffplay /dev/video0
+
+- sudo apt-get install luvcview
+  luvcview -d /dev/video1 -f yuv -s 300x200
+  luvcview -d /dev/video0 -f yuv
+
+- 初学者到底该选择什么RTOS？
+
+  - https://blog.csdn.net/jiejiemcu/article/details/99951767
+
+  - 杰杰,一直坚持研究OS, 推荐从tencent tinyos研究, 从rt-thread研究,再看freertos, ucos2, liteos,越简单越好看, 然后所有的rtos系统内核都差不多.
+
+  - github开源
+
+  - 引言
+    前天的推文中，有读者问我，作为初学者到底该选择什么RTOS来学习？
+
+  - 本答案仅适合初学者，对于已经学会os的大神不适用！
+
+    答案
+    作为一个深入了解过rtos内核实现的我，先给出个回答吧：
+    选择越简单的操作系统内核越好
+    rtos必须是推荐国内的！
+    其实我个人首推TencentOS tiny，但是目前仅在内测阶段，就算了吧，听汪大神说应该快开源了。
+    然后是rt-thread
+    接下来就是LiteOS
+
+    原因
+    首先吧，还是那句话，越简单越好
+
+  - https://www.zhihu.com/question/301250055?sort=created
+
+    ```
+    国内还有个tencentostiny，相对于其他的，这个代码量看起来更像是个半成品。也基于此我很推荐学生和初学者学这个，没有特别多的奇淫技巧，每个功能一个文件，基本上一边用一边读源码就行了，可以很透彻的读懂一个RTOS。总结下学习阶段:推荐tencentostiny了解RTOS基本功能和实现原理。后期要学习Linux的推荐rt-thread，里面用了很多有趣的C特性或者编译器特性项目阶段:推荐freertos,ucosiii或者rt-thread的ltsc分支，依顺序推荐。稳定性最重要，如果项目需要特殊认证啥的需要你再看看传感器项目:contiki,nuttx都不错
+    
+    作者：onlyloveonlyu
+    链接：https://www.zhihu.com/question/301250055/answer/1489967331
+    来源：知乎
+    著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+    ```
+
+    -
+
+  - 

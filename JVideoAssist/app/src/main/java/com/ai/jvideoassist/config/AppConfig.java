@@ -59,7 +59,7 @@ public class AppConfig {
 
         mVideoURLDefault = PropertiesUtil.getIns().getValue("VideoURLDefault","rtmp://58.200.131.2:1935/livetv/cctv1");
 
-        mVideoURL01 = PropertiesUtil.getIns().getValue("VideoURL01","rtmp://58.200.131.2:1935/livetv/cctv1");
+        mVideoURL01 = PropertiesUtil.getIns().getValue("VideoURL01","rtmp://192.168.1.101:1936/live/livestream");
         mVideoURL02 = PropertiesUtil.getIns().getValue("VideoURL02","rtmp://58.200.131.2:1935/livetv/cctv1");
         mVideoURL03 = PropertiesUtil.getIns().getValue("VideoURL03","rtmp://58.200.131.2:1935/livetv/cctv1");
         mVideoURL04 = PropertiesUtil.getIns().getValue("VideoURL04","rtmp://58.200.131.2:1935/livetv/cctv1");
