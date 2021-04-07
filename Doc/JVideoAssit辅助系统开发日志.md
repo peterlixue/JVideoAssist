@@ -2092,7 +2092,6 @@ QtCreator源码分析（一）——QtCreator源码简介
 
     1,$s/Vim/vim/gc 会出现提示”replace with foo(y/n/a/q/l/^E/^Y)?”，询问是否确认执行
 
-
 ---
 
 2021年03月30日09:54:21
@@ -2142,4 +2141,35 @@ QtCreator源码分析（一）——QtCreator源码简介
 
     -
 
-  - 
+
+---
+
+2021年04月07日16:08:55
+
+- 准备开发第三个版本
+
+- Android视频播放最全总结：MediaPlayer+TextureView封装一个完美实现全屏、小窗视频播放器，附项目源码
+
+  - https://www.sohu.com/a/161375357_733133
+  - https://www.jianshu.com/p/420f7b14d6f6
+  - 评价 是我需要的, 据说支持全屏和小窗口的切换,特别是和recycleview无缝衔接,
+  - 用MediaPlayer+TextureView封装一个完美实现全屏、小窗口的视频播放器
+  - 看看项目源代码,如何实现的处理   https://github.com/jianjunxiao/NiceVieoPlayer
+  - https://gitee.com/BeiShenTecTeam/NiceVieoPlayer  我自己fork的分支
+
+- https://developer.android.google.cn/guide/topics/media/media-formats.html 媒体格式支持说明 官方
+
+  ```
+  网络协议
+  音频和视频播放支持以下网络协议：
+  
+  RTSP（RTP、SDP）
+  HTTP/HTTPS 渐进式流式传输
+  HTTP/HTTPS 实时流式传输草案协议：
+  仅限 MPEG-2 TS 媒体文件
+  协议版本 3（Android 4.0 及更高版本）
+  协议版本 2 (Android 3.x)
+  在 Android 3.0 之前的版本中不支持
+  ```
+
+- 

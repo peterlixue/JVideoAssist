@@ -28,6 +28,7 @@ import com.ai.jvideoassist.config.AppConfig;
 import java.util.HashMap;
 
 import cn.nodemedia.NodePlayer;
+import cn.nodemedia.NodePlayerDelegate;
 import cn.nodemedia.NodePlayerView;
 
 public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.RecycleViewHolder> {
@@ -112,11 +113,13 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
     }
 
 
+
     //RecycleView ItemView设置
-    public class RecycleViewHolder extends RecyclerView.ViewHolder {
+    public class RecycleViewHolder extends RecyclerView.ViewHolder implements NodePlayerDelegate{
 
         private NodePlayerView nodePlayerView;
         private NodePlayer nodePlayer;
+
         private boolean firstTouch = false;
         private long lastClickTime = 0;
         private static final long DOUBLE_CLICK_TIME_DELTA = 500;//milliseconds
@@ -143,12 +146,25 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
             nodePlayer.setRtspTransport(NodePlayer.RTSP_TRANSPORT_TCP);
             //设置视频是否开启
             nodePlayer.setVideoEnable(true);
-            nodePlayer.setBufferTime(10);
+            nodePlayer.setAudioEnable(false);
+
+            nodePlayer.setBufferTime(100);
             nodePlayer.setMaxBufferTime(0);
+            nodePlayer.setAutoReconnectWaitTimeout(2000);
+
+            //设置事件回调代理
+            nodePlayer.setNodePlayerDelegate(this);
             //nodePlayerView.setVisibility(View.INVISIBLE);
 
 
         }
+
+        @Override
+        public void onEventCallback(NodePlayer player, int event, String msg) {
+
+            Log.d(TAG, player.toString() + event + ": "+ msg);
+        }
+
 
 
     }
