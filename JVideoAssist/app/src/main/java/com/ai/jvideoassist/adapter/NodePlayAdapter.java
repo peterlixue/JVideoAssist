@@ -356,9 +356,9 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
 
     public void stopALl() {
         for (Integer key : mViewHolderMap.keySet()) {
-
-            mViewHolderMap.get(key).nodePlayer.stop();
-
+            if (mViewHolderMap.get(key).nodePlayer.isPlaying()) {
+                mViewHolderMap.get(key).nodePlayer.stop();
+            }
         }
     }
 

@@ -41,11 +41,13 @@ public class PropertiesUtil {
                 //data目录读取配置
                 FileInputStream fileInputStream = new FileInputStream(dataSavePath);
                 mCfgProps.load(fileInputStream);
+                fileInputStream.close();
             }
             else {
                 //从assert读取配置
                 InputStream inputStream = context.getAssets().open(configPath);
                 mCfgProps.load(inputStream);
+                inputStream.close();
             }
             return true;
         }
@@ -73,6 +75,7 @@ public class PropertiesUtil {
             }
             FileOutputStream fileOutputStream = new FileOutputStream(dataSavePath);
             mCfgProps.store(fileOutputStream,null);
+            fileOutputStream.close();
             return true;
         } catch (IOException e) {
             Log.d(this.getClass().getSimpleName(),e.getMessage());
