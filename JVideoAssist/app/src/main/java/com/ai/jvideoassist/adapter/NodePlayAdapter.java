@@ -119,7 +119,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
 
         private NodePlayerView nodePlayerView;
         private NodePlayer nodePlayer;
-
+        private int reConCount = 0;
         private boolean firstTouch = false;
         private long lastClickTime = 0;
         private static final long DOUBLE_CLICK_TIME_DELTA = 500;//milliseconds
@@ -163,6 +163,13 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         public void onEventCallback(NodePlayer player, int event, String msg) {
 
             Log.d(TAG, player.toString() + event + ": "+ msg);
+            if (event == 1003)
+            {
+                reConCount += 1;
+                if (reConCount > 3 && player != null) {
+                    player.stop();
+                }
+            }
         }
 
 

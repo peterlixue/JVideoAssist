@@ -2172,4 +2172,7 @@ QtCreator源码分析（一）——QtCreator源码简介
   在 Android 3.0 之前的版本中不支持
   ```
 
-- 
+- 搭建USB摄像头转RTSP服务器的多种方法
+
+  - https://blog.csdn.net/zong596568821xp/article/details/88540455
+  - 

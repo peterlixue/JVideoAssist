@@ -1,7 +1,12 @@
 package com.ai.jvideoassist.config;
 
 import android.content.Context;
+import android.telephony.mbms.FileInfo;
+import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +19,7 @@ public class PropertiesUtil {
 
     private static String configPath = "appConfig.properties";
     private Properties mCfgProps;
+    private String dataSavePath;
 
     //ready to use singleton pattern
     private PropertiesUtil(){}
@@ -29,12 +35,22 @@ public class PropertiesUtil {
     public boolean loadProperties(Context context) {
         mCfgProps = new Properties();
         try {
-            InputStream inputStream = context.getAssets().open(configPath);
-            mCfgProps.load(inputStream);
+            dataSavePath = String.format("%s/%s", context.getFilesDir().getAbsolutePath(), configPath);
+            File cfgFile = new File(dataSavePath);
+            if (cfgFile.exists()) {
+                //data目录读取配置
+                FileInputStream fileInputStream = new FileInputStream(dataSavePath);
+                mCfgProps.load(fileInputStream);
+            }
+            else {
+                //从assert读取配置
+                InputStream inputStream = context.getAssets().open(configPath);
+                mCfgProps.load(inputStream);
+            }
             return true;
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+        }
+        catch (IOException e) {
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }
@@ -50,11 +66,16 @@ public class PropertiesUtil {
     public boolean saveProperties(Context context) {
         try
         {
-            FileOutputStream outputStream = context.openFileOutput(configPath,Context.MODE_PRIVATE);
-            mCfgProps.store(outputStream,null);
+            File file = new File(dataSavePath);
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(dataSavePath);
+            mCfgProps.store(fileOutputStream,null);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(this.getClass().getSimpleName(),e.getMessage());
             return false;
         }
     }

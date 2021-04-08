@@ -206,7 +206,6 @@ public class FragSetting extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, " Begin onDestroy");
 
         Log.d(TAG, " onDestroy");
     }

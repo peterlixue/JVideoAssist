@@ -89,7 +89,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop");
+        Log.d(TAG, "Begin onStop");
+
+
+        Log.d(TAG, "End onStop");
     }
 
     @Override
@@ -109,11 +112,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        Log.d(TAG, "Begin onDestroy");
         //save new setting
         AppConfig.getIns().saveAppConifg(getApplicationContext());
 
-        Log.d(TAG, "onDestroy");
+        Log.d(TAG, "End onDestroy");
 
     }
 
