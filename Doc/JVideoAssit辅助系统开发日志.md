@@ -2076,20 +2076,28 @@ QtCreator源码分析（一）——QtCreator源码简介
     例如：
     ffplay -fflags nobuffer rtmp:192.168.1.245/live/audio
 
+  - 由于ffplay默认采用UDP连接RTSP流且不会自动切换为TCP，故此时需要强制指定ffplay使用TCP方式，
+  
+  - ffplay -rtsp_transport tcp  rtsp://[username]:[password]@[ip]:[port]/path
+    
+  - livecapture 配置  ffplay -fflags nobuffer rtsp://192.168.1.101:5540/live/1
+    
+  -  ffplay -fflags nobuffer rtsp://192.168.1.101:5542/live/1 成功.
+    
   - 我将原来使用的测试配置文件的1935端口,改成1936了, 运行srs服务,成功执行
 
     - ```
-      ./objs/srs -c ./conf/myrtmp.conf 
+    ./objs/srs -c ./conf/myrtmp.conf 
       [2021-03-29 15:25:28.198][Trace][11392][0] XCORE-SRS/3.0.157(OuXuli)
-      [2021-03-29 15:25:28.198][Trace][11392][0] config parse complete
+    [2021-03-29 15:25:28.198][Trace][11392][0] config parse complete
       [2021-03-29 15:25:28.198][Trace][11392][0] you can check log by: tail -f ./objs/srs.log (@see https://github.com/ossrs/srs/wiki/v1_CN_SrsLog)
       [2021-03-29 15:25:28.198][Trace][11392][0] please check SRS by: ./etc/init.d/srs status
       ```
-
+  
     - nginx 服务stop后,ffmpeg推流到1935的话,就不能直接拉流,让ffplay播放了. 解释了以前的不经过srs能够播放视频的疑问
-
+  
   - 将所有的Vim字符串替换为vim字符串
-
+  
     1,$s/Vim/vim/gc 会出现提示”replace with foo(y/n/a/q/l/^E/^Y)?”，询问是否确认执行
 
 ---
@@ -2141,7 +2149,6 @@ QtCreator源码分析（一）——QtCreator源码简介
 
     -
 
-
 ---
 
 2021年04月07日16:08:55
@@ -2175,4 +2182,95 @@ QtCreator源码分析（一）——QtCreator源码简介
 - 搭建USB摄像头转RTSP服务器的多种方法
 
   - https://blog.csdn.net/zong596568821xp/article/details/88540455
+
+
+
+---
+
+- 2021年04月07日15:13:01
+
+  - 今天测试了电气外协的流媒体服务器和客户端的效果,经过折腾参数, 最终利用directshow驱动,利用ffmpeg找到windows下的USB相机, 通过修改设备-> USB选择加载对应的相机,然后通过设备管理器,也可以看到图像设备, 对应的相机的设备名称. 
+  - 然后修改LiveCapture的配置, 对应的分辨率,输入原始图像和输出的截取图像, 启动livecapture这个程序,就可以正常启动rtsp服务
+  - 然后下载vlc player, 在更多选项里面,设置缓存时间为1ms,就能达到实时播放的效果,不然只感觉画面流畅,但是动作有延时2秒.
+  - 
+
+- 工业相机必看的六大参数
+
+  - https://blog.csdn.net/xiaomingzeng/article/details/79781782
+  - 分辨率,像素深度,帧率,曝光方式和快门速度shutter,像元尺寸,光谱响应特性
+
+- 调试appConfig的bug, 读取和保存的文件位置不一样,导致保存后读取失效
+
+  - 注：.properties文件放置的路径为/data/data/packagename/files
+  - 打开的时候读取的是assert下面的配置appconfig.properties文件.
+  - https://www.cnblogs.com/yjpjy/p/5407251.html
+  - 一般处理这个问题,是先读取assert目录下的文件,然后递归拷贝到配置的数据目录下, /data/之后就操作数据目录就行了. 逻辑还是有问题
+  - 读取固定配置,或者手动更改的配置信息,最好可以用assert来管理,这样程序编码IDE可以管理修改.
+  - 找到了,可以利用IDE工具 visual Studio中的 View->ToolWindow->Device File Explorer, 编写修改设备中的数据文件
+  - 如果是动态写入修改的配置文件,还是要用SharePerence或者写入常量指定目录. 再读取写入.
+
+- android：使用Properties保存程序配置
+
+  - https://blog.csdn.net/cch1024/article/details/51408774
+  - 必须看看,这个, 程序配置文件的安装和卸载的时候的清理
+  - https://blog.csdn.net/qq_28193019/article/details/102880179
+
+- 决定策略:
+
+  - 判断外部目录下data是否有property配置文件,没有就读取assert的文件,拷贝一个到data下面
+  - 如果有property文件,就读取到程序作为配置信息
+  - 程序退出的时候, 将最新配置内容,保存到data目录下
+
+- 【android】getCacheDir()、getFilesDir()、getExternalFilesDir()、getExternalCacheDir()的作用
+
+  - https://blog.csdn.net/xialong_927/article/details/113118554
+
+  - getCacheDir()方法用于获取/data/data/<application package>/cache目录
+
+    getFilesDir()方法用于获取/data/data/<application package>/files目录
+
+  - 后续调用getAbsolutePath()获取
+
+- java file 不存在_Java FileOutputStream如果不存在则创建文件
+
+  - https://blog.csdn.net/weixin_39997173/article/details/114188727
+  - ini和properties属性文件格式很像,虽然操作方便,但是序列化到本地文件, 里面的字段顺序是错乱的,
+  - 有时间的话,建议用xml文件配置节点, 然后修改节点值.
+
+- invalid pthread_t 0x786315fd50 passed to pthread_join  线程操作的异常,隐患
+
+  - 描述: 在JNI运行中报错，invalid pthread_t passed to libc，查看代码发现，在调用pthread_join()方法时报错
+    原因：检测到线程队列指针为空的情况下还去调用分离线程会出现异常,在pthread_join中会调
+  - 处理：经检测发现，由于c++代码中不严谨的写法导致了该问题，未启动线程（未传入线程指针）前，调用了pthread_join的方法，在以前的版本中，软件没有崩溃，所以没有检测到，修改后无问题
+  - 获取当前系统版本，大于等于26的话，不再调用 pthread_detach
+  - https://www.jianshu.com/p/348d6aa63feb?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+
+---
+
+2021年04月09日
+
+- 解决电气陈任给的外部的LiveCapture流媒体服务程序, 解决启动程序提示找不到libass.so的共享库的问题
+  - 官网下载libass,然后install fabiridio, 在运行configure, make,makeinstall
+  - http://www.linuxfromscratch.org/blfs/view/svn/multimedia/libass.html  我安装的版本是0.9 估计太高了
+  - https://blog.csdn.net/crabdave/article/details/84835301
+  - 安装libass5版本,就可以,然后注意make install
+  
+- 实际效果:
+
+  - 经过解决库依赖的问题,然后核对配置livecapture.xml信息, 修改设备节点,对应的端口554X, 
+
+  - 拷贝四份文件夹目录, 运行4个终端shell启动多媒体服务
+
+  - 然后在shell中,运行4个拉流播放命令,由于vlc的播放无效流地址导致机器死机的bug,所以采用ffplay进行无缓存实时播放
+
+  - ```
+     ffplay -fflags nobuffer rtsp://192.168.1.101:5542/live/1
+    ```
+
+  - 成功播放, 在线打开秒表计时器,用一个摄像头拍摄画面,计算延时某一路 约有600ms的延时.
+
+  - 然后直接用开发的Android JVideoAssit 修改系统参数地址为rtsp, 然后保存,再播放,发现成功
+
+  - 刚开始播放,视频延时大概600ms~1000ms, 后面经过休眠,再重新打开机器来看APp, 发现延时播放了,估计是画面不同步了一段时间.
+
   - 
