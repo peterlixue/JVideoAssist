@@ -2273,4 +2273,16 @@ QtCreator源码分析（一）——QtCreator源码简介
 
   - 刚开始播放,视频延时大概600ms~1000ms, 后面经过休眠,再重新打开机器来看APp, 发现延时播放了,估计是画面不同步了一段时间.
 
+
+---
+
+2021年04月12日08:50:54
+
+- 多画面播放器
+  - https://gitee.com/ithewei/hplayer
+  - 做一个类似VLC的播放器，能播放文件源、网络源、设备捕获源；
+  - A multi-screen player using Qt + FFmpeg.
+- https://github.com/jianjunxiao/NiceVieoPlayer  
+  - 完美切换全屏、小窗口的Android视频播放器 支持本地和网络视频播放. 完美切换小窗口、全屏，可在RecyclerView中无缝全屏.
+  - 学习这个,一步到位
   - 
