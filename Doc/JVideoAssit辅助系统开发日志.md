@@ -345,6 +345,9 @@
     buildscript {
         repositories {
             jcenter()
+            maven { url 'https://jitpack.io' }
+             maven { url 'https://www.jitpack.io' }
+    
              maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
              maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
              maven { url 'http://maven.aliyun.com/nexus/content/repositories/google'}
@@ -355,15 +358,18 @@
     allprojects {
         repositories {
             jcenter()
+            maven { url 'https://jitpack.io' }
+             maven { url 'https://www.jitpack.io' }
+    
     //        maven { url "https://maven.google.com"}
              maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-             maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+           maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
              maven { url 'http://maven.aliyun.com/nexus/content/repositories/google'}
              maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin'}
         }
     }
     ```
-
+    
     设置以后,选择File->Sys gradle with project files, 再次更新gradle构建文件.- 
     
     
@@ -1214,7 +1220,12 @@
   - 后续解决,界面切换,自动断流,停止播放的问题
 - 2020最新RTMP+HTTP+RTSP直播地址汇总（亲测可用）
   - https://willarun365.blog.csdn.net/article/details/109180771
+  
   - 用VLC打开,网络流,可以看到视频,自己测试过CCTV1的RTSP流
+  
+  - CCTV-1综合:rtmp://58.200.131.2:1935/livetv/cctv1
+  
+    CCTV-2财经:rtmp://58.200.131.2:1935/livetv/cctv2
 - 设计NodePlayerAdapter,使用播放开源NodePlayer插件,可以同时播放4路RTMP, 画面不卡顿
 - 4副图片直接有1-2秒内的不同步
 
@@ -2273,16 +2284,134 @@ QtCreator源码分析（一）——QtCreator源码简介
 
   - 刚开始播放,视频延时大概600ms~1000ms, 后面经过休眠,再重新打开机器来看APp, 发现延时播放了,估计是画面不同步了一段时间.
 
-
 ---
 
 2021年04月12日08:50:54
 
 - 多画面播放器
+
   - https://gitee.com/ithewei/hplayer
   - 做一个类似VLC的播放器，能播放文件源、网络源、设备捕获源；
   - A multi-screen player using Qt + FFmpeg.
+
 - https://github.com/jianjunxiao/NiceVieoPlayer  
+
   - 完美切换全屏、小窗口的Android视频播放器 支持本地和网络视频播放. 完美切换小窗口、全屏，可在RecyclerView中无缝全屏.
   - 学习这个,一步到位
-  - 
+
+- jcenter、mavenCentral及google三个远程仓库
+
+  - https://www.cnblogs.com/xuan52rock/p/12772979.html
+
+  - 天朝使用jcenter、mavenCentral及google三个远程仓库，Gradle Sync会很慢，google仓库甚至需要[梯子](https://github.com/hugetiny/awesome-vpn)才能访问。为了加快Gradle Sync速度，一招教你优先用 [阿里云仓库服务](https://maven.aliyun.com/mvn/view) 的仓库作为下载源。 
+
+  - 阿里云镜像源配置
+    在项目根目录下的build.gradle的allprojects.repositories闭包内的最前面添加阿里云的仓库地址：
+
+    ```shell
+    buildscript {
+        repositories {
+            jcenter()
+            google()
+        }
+    }
+    
+    allprojects {
+        repositories {
+            maven {
+                url 'https://maven.aliyun.com/repository/jcenter'
+            }
+            maven {
+                url 'https://maven.aliyun.com/repository/central'
+            }
+            maven {
+                url 'https://maven.aliyun.com/repository/google'
+            }
+            jcenter()
+            mavenCentral()
+            google()
+        }
+    }
+    ```
+
+  - ```
+     supportV4    : "com.android.support:support-v4:${dependVersion.support}",
+                appcompatV7  : "androidx.appcompat:appcompat:1.0.2",
+                recyclerview : "androidx.recyclerview:recyclerview:1.0.0",
+                design       : "com.android.support:design:${dependVersion.support}",
+                // 测试
+                junit        : "junit:junit:4.12",
+                espresso     : "com.android.support.test.espresso:espresso-core:2.2.2",
+                // 第三方
+                rxpermissions: "com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar",
+                rxjava       : "io.reactivex.rxjava2:rxjava:2.1.0",
+                glide        : "com.github.bumptech.glide:glide:3.7.0"
+    ```
+
+- 如何在Android中为任何新项目自动添加自定义依赖项?(How to add custom dependencies automatically in android for any new project?)
+
+  - https://www.it1352.com/1913354.html
+
+  - ```shell
+    implementation 'com.android.support:recyclerview-v7:25.1.1'
+     implementation 'com.squareup.picasso:picasso:2.5.2'
+     implementation 'com.jakewharton:butterknife:8.5.1'
+     implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+     implementation 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+    ```
+
+- Android Studio问题：导入github下载的项目，由于gradle版本不同而造成项目无法编译成功
+
+  - 原因是当前AS版本和你下载的项目用的AS版本有差异，而gradle编译的版本一般是跟随AS的版本
+
+  - 将classpath 'com.android.tools.build:gradle:3.5.0'的版本改为之前项目用的AS的版本（去哪查看项目用的AS版本？自己找吧），手动修改，比如改为3.2.0（如果找不到项目用的AS的版本，可以随便改一个存在的版本）
+
+  - 查看gradle-wrapper.properties文件, 建议把这里的值改为本地gradle版本(查看其它可正常编译的项目)，比如：改为
+
+    ```shell
+    distributionUrl=https\://services.gradle.org/distributions/gradle-5.4.1-all.zip
+    ```
+
+  - https://blog.csdn.net/God_Jn/article/details/104206078
+
+- Android 解决： Failed to resolve: com.android.support:appcompat-v7:28.+ 错误
+
+  - Android studio的SDK工具版本低于工程需要的SDK工具版本，**SDK Build-Tools与工程所需的不一致。**
+  - 自己工程sdk manager查看, 自己下载的sdk版本,和当前工程设置的sdk版本不匹配
+
+- 第三方控件的这种继承设计和初始化
+
+  - public class NiceVideoPlayer extends FrameLayout  基类是一个布局类
+
+  - 布局转载了对应的控件
+
+    ```c++
+    private void init() {
+            mContainer = new FrameLayout(mContext);
+            mContainer.setBackgroundColor(Color.BLACK);
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            this.addView(mContainer, params);
+        }
+    ```
+
+
+---
+
+2021年04月13日09:52:12
+
+- Glide系列(一) — Glide 框架结构浅析
+  - Glide 是一个图片加载库，跟它同类型的库还有 Picasso、Fresco、Universal-Image-Loader 等。
+  - 分析 Glide 到整体结构设计 (分层设计、缓存设计)。
+  - DataLoadProvider 内持有处理图片相关的编/解码器。
+    LoadProvider 是一个聚合类，继承自 DataLoadProvider 接口，因此具备提供编解码器的能力，同时聚合了 ModelLoader 和 ResourceTranscoder。
+    ModelLoader 会根据提供的加载类型返回一个相应的 DataFetcher
+    原文链接：https://blog.csdn.net/Love667767/article/details/106576888/
+-  Android：什么是android.R.id.content用于？
+  - android.R.id.content为你提供了视图的根元素，而不必知道它的实际名称/类型/ ID。
+- nicevideoplayer 研究源码,发现使用了播放底层利用接口和播放器控件封装播放. 全屏和小窗口等模式,都是通过自己定义组织界面,然后封装成一个控件.
+  - 在recycleview列表模式下, 自动加载每一个带全屏和小窗口调整模式的播放器就可以
+  - 那么自己的设计方式和这个不一样,我是在外面判断人工双击的哪一个播放元素,然后去外面控制调用播放模式. 是由外向内控制设计,外部主导内部; 它这种封装,就是将所有操作定义实现好,外部只需要加载就可以. 是我最初的设计初中, 效果更好,模块独立性更强.
+  - nicevideoplayer根据设计,只支持单单通道视频播放
+  - cctv1 的rtmp的播放一开始然后就停止了,有bug
