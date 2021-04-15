@@ -2396,7 +2396,6 @@ QtCreator源码分析（一）——QtCreator源码简介
         }
     ```
 
-
 ---
 
 2021年04月13日09:52:12
@@ -2415,3 +2414,230 @@ QtCreator源码分析（一）——QtCreator源码简介
   - 那么自己的设计方式和这个不一样,我是在外面判断人工双击的哪一个播放元素,然后去外面控制调用播放模式. 是由外向内控制设计,外部主导内部; 它这种封装,就是将所有操作定义实现好,外部只需要加载就可以. 是我最初的设计初中, 效果更好,模块独立性更强.
   - nicevideoplayer根据设计,只支持单单通道视频播放
   - cctv1 的rtmp的播放一开始然后就停止了,有bug
+
+---
+
+2021年04月14日11:52:57
+
+- 优化自己的全屏播放设计, 通过记录当前播放的位置, 全屏后,从这个位置后面继续播放. 看在实时播放是否可行
+
+- .h（头文件） .lib（库文件） .dll（动态链接库文件） 之间的关系和作用的区分
+
+  - https://www.cnblogs.com/azbane/p/7364060.html
+
+  - 使用场景不一样,   `.h头文件是编译时必须的`，`lib是链接时需要的`，`dll是运行时需要的`。
+
+  - 用途不同：
+
+    - 如果有dll文件，动态库,动态链接,那么lib一般是一些索引信息，记录了dll中函数的入口和位 置，dll中是函数的具体内容；
+    - 如果只有lib文件，静态库,静态链接,那么这个lib文件是静态编译出来的，索引和实现都在其中.
+    - H文件作用是:声明函数接口, DLL文件作用是: 函数可执行代码和数据,lib文件,静态库是具体代码和内容, 动态编译是函数的索引信息,调用的哪个dll库,这个函数在dll的代码的位置
+    - 动态库一般会有对应的导入库lib，方便程序静态载入动态链接库，否则你可能就需要自己LoadLibary调入DLL文件，然后再手工GetProcAddress获得对应函数了。
+    - 有了导入库lib，你只需要链接导入库后按照头文件函数接口的声明调用函数就可以了。导入库和静态库的区别很大，他们实质是不一样的东西。静态库本身就包含了实际执行代码、符号表等等，而对于导入库而言，其实际的执行代码位于动态库中，导入库只包含了地址符号表等，确保程序找到对应函数的一些基本地址信息
+
+  - 优缺点
+
+    - 静态编译的lib文件有好处：给用户安装时就不需要再挂动态库了。
+    - 但也有缺点，就是导致应用程序比较大，而且失去了动态库的灵活性，在版本升级时，同时要发布新的应用程序才行。
+    - 在动态库的情况下，有两个文件，而一个是引入库（.LIB）文件，一个是DLL文件，引入库文件包含被DLL导出的函数的名称和位置，DLL包含实际的函数和数据.
+    - 应用程序使用LIB文件链接到所需要使用的DLL文件，库中的函数和数据并不复制到可执行文件中，因此在应用程序的可执行文件中，存放的不是被调用的函数代码，而是DLL中所要调用的函数的内存地址，这样当一个或多个应用程序运行是再把程序代码和被调用的函数代码链接起来，从而节省了内存资源。 
+    - 多个使用静态库的多个程序, 使用的内存都是独立的,**`包含多个静态库的拷贝`**,运行的时候就会有 多个实例对象; 动态库在程序编译时并不会被连接到目标代码中，而是在程序运行是才被载入。**不同的应用程序如果调用相同的库，那么在内存里`只需要有一份该共享库的实例`**
+
+  - 本质区别
+
+    - 静态链接库与动态链接库都是共享代码的方式，如果采用静态链接库，则无论你愿不愿意，lib 中的指令都全部被直接包含在最终生成的 EXE 文件中了。但是若使用 DLL，该 DLL 不必被包含在最终 EXE 文件中，EXE 文件执行时可以“动态”地引用和卸载这个与 EXE 独立的 DLL 文件。静态链接库和动态链接库的另外一个区别`在于静态链接库中不能再包含其他的动态链接库或者静态库`，而在动态链接库中还`可以再包含其他的动态或静态链接库`。 解决循环依赖问题,动态库
+
+    - Window与Linux执行文件格式不同，在创建动态库的时候有一些差异。
+
+       在Windows系统下的执行文件格式是PE格式，动态库需要一个DllMain函数做出初始化的入口，通常在导出函数的声明时需要有_declspec(dllexport)关键字。
+
+       Linux下gcc编译的执行文件默认是ELF格式，不需要初始化入口，亦不需要函数做特别的声明，编写比较方便。
+
+      与创建静态库不同的是，不需要打包工具（ar、lib.exe），直接使用编译器即可创建动态库。
+
+- 介绍linux/windows OS下静态库（.a、.lib）和动态库（.so、.dll）的 link & load
+
+  - https://www.cnblogs.com/scotth/p/3977928.html
+
+  - 这里面讲解的很全面,从原理,过程,本质区别,应用,工程开发上面
+
+  - 自定义或者第三方库运行时候,必须设置库搜索的路径
+
+    - .1. *.so放入 /lib  或  /etc/lib　　　（放进系统的lib环境变量的目录，否则要自己指定链接的目录）
+
+      2./etc/ld.so.conf    编辑文件,在 调用ldconfig,更新
+
+      3.设置LD_LIBRARY_PATH
+
+  - Linux下使用ar工具、Windows下vs使用lib.exe，将目标文件压缩到一起，并且对其进行编号和索引，以便于查找和检索。一般创建静态库的步骤如图所示. 预处理->编译->汇编->编号,索引,压缩打包,链接.
+
+  - Linux静态库的生成
+
+    ```shell
+    g++ -c StaticMath.cpp   #生成目标文件.o
+    ar -crv libstaticmatch.a staticmath.o
+    ```
+
+  - windows静态库的生成
+
+    ```shell
+    首先，通过使用带编译器选项 /c 的 Cl.exe 编译代码 (cl /c StaticMath.cpp)，
+    创建名为“StaticMath.obj”的目标文件。
+    然后，使用库管理器 Lib.exe 链接代码 (lib StaticMath.obj)，创建静态库StaticMath.lib。
+    一般直接在VS工程里面设置,配置工程为生成静态库工程
+    ```
+
+  - linux和Windows的动态库的创建生成有区别
+
+    - Window与Linux执行文件格式不同，在创建动态库的时候有一些差异
+
+      ```shell
+       在Windows系统下的执行文件格式是PE格式，动态库需要一个DllMain函数做出初始化的入口，通常在导出函数的声明时需要有_declspec(dllexport)关键字。
+      
+       Linux下gcc编译的执行文件默认是ELF格式，不需要初始化入口，亦不需要函数做特别的声明，编写比较方便。
+      
+      与创建静态库不同的是，不需要打包工具（ar、lib.exe），直接使用编译器即可创建动态库。
+      ```
+
+    - Linux下生成so动态库
+
+      - -fPIC 创建与地址无关的编译程序（pic，position independent code），是为了能够在多个应用程序间共享。 
+      - -shared指定生成动态链接库。合并为一步生成库, 
+
+      ```shell
+      g++ -fPIC -shared -o libdynmatch.so DynamicMath.cpp 
+      ```
+
+  - 重要问题: 在执行的时候是如何定位共享库文件的呢？
+
+    1)        当系统加载可执行代码时候，能够知道其所依赖的库的名字，但是还需要知道绝对路径。此时就需要系统动态载入器(dynamic linker/loader)。
+
+    2)        对于elf格式的可执行程序，是由ld-linux.so*来完成的，它先后搜索elf文件的 DT_RPATH段—环境变量LD_LIBRARY_PATH—/etc/ld.so.cache文件列表—/lib/,/usr/lib 目录找到库文件后将其载入内存。
+
+    如何让系统能够找到它：
+
+    l  如果安装在/lib或者/usr/lib下，那么ld默认能够找到，无需其他操作。
+
+    l  如果安装在其他目录，需要将其添加到/etc/ld.so.cache文件中，步骤如下：
+
+    n  编辑/etc/ld.so.conf文件，加入库文件所在目录的路径（比如我libev的静态库默认安装在/usr/local/lib,  那就添加这行  inlcude /usr/local/lib）
+
+    n  运行ldconfig ，该命令会重建/etc/ld.so.cache文件
+
+    我们将创建的动态库复制到/usr/lib下面，然后运行测试程序,可以成功直接找到运行库.
+
+  - 链接第三方或者自己生成的动态库的时候, 还要指定库的路径
+
+    - . ldconfig做的这些东西都与运行程序时有关，跟编译时一点关系都没有。编译的时候还是该加-L就得加，不要混淆了
+
+    - ```shell
+       g++ TestDynamicLibrary.cpp -L/usr/local/lib  /usr/local/lib/libdynmath.so
+      ```
+
+  - 有时候用户想知道系统中有哪些动态链接库,或者想知道系统中有没有某个动态链接库,
+
+    这时,可用-p选项让ldconfig输出缓存文件中的动态链接库列表,从而查询得到.
+
+    - 执行结束后,ldconfig将刷新缓存文件/etc/ld.so.cache.
+
+    ```shell
+    ldconfig -p
+    sudo ldconifg
+    sudo ldconfig -v   #用了-v选项,以使ldconfig在运行时输出正在扫描的目录及搜索到的共享库, 用户可以清楚地看到运行的结果
+    ```
+
+- 动态库的显式调用
+  上面介绍的动态库使用方法和静态库类似属于隐式调用，编译的时候指定相应的库和查找路径。其实，动态库还可以显式调用。【在C语言中】，显示调用一个动态库轻而易举！
+
+  - https://www.cnblogs.com/scotth/p/3977928.html
+
+  在Linux下显式调用动态库
+  #include <dlfcn.h>，提供了下面几个接口：
+
+  l  void * dlopen( const char * pathname, int mode )：函数以指定模式打开指定的动态连接库文件，并返回一个句柄给调用进程。
+
+  l  void* dlsym(void* handle,const char* symbol)：dlsym根据动态链接库操作句柄(pHandle)与符号(symbol)，返回符号对应的地址。使用这个函数不但可以获取函数地址，也可以获取变量地址。
+
+  l  int dlclose (void *handle)：dlclose用于关闭指定句柄的动态链接库，只有当此动态链接库的使用计数为0时,才会真正被系统卸载。
+
+  l  const char *dlerror(void)：当动态链接库操作函数执行失败时，dlerror可以返回出错信息，返回值为NULL时表示操作函数执行成功。
+
+  在Windows下显式调用动态库
+  应用程序必须进行函数调用以在运行时显式加载 DLL。为显式链接到 DLL，应用程序必须：
+
+  l  调用 LoadLibrary（或相似的函数）以加载 DLL 和获取模块句柄。
+
+  l  调用 GetProcAddress，以获取指向应用程序要调用的每个导出函数的函数指针。由于应用程序是通过指针调用 DLL 的函数，编译器不生成外部引用，故无需与导入库链接。
+
+  l  使用完 DLL 后调用 FreeLibrary。
+
+  显式调用C++动态库注意点
+  对C++来说，情况稍微复杂。显式加载一个C++动态库的困难一部分是**因为**`C++的name mangling`；另一部分是因为没有提供一个合适的API来装载类，在C++中，您可能要用到库中的一个类，而这需要创建该类的一个实例，这不容易做到。
+
+  `name mangling可以通过extern "C"解决。`C++有个特定的关键字用来声明采用C binding的函数：extern "C" 。用 extern "C"声明的函数将使用函数名作符号名，就像C函数一样。因此，只有非成员函数才能被声明为extern "C"，并且不能被重载。尽管限制多多，extern "C"函数还是非常有用，因为它们可以象C函数一样被dlopen动态加载。冠以extern "C"限定符后，并不意味着函数中无法使用C++代码了，相反，它仍然是一个完全的C++函数，可以使用任何C++特性和各种类型的参数。
+
+- gcc或者g++的常用编译选项说明
+
+- ldd查看项目依赖,设置库路径,再查看库的依赖
+
+- nm命令有时候可能需要查看一个库中到底有哪些函数，**nm****命令**可以打印出库中的涉及到的所有符
+
+  - https://blog.csdn.net/qq_29350001/article/details/54561642
+  - readelf, objdump,nm命令区别, 读取elf目标文件信息, objdump查看目标文件的反汇编目标代码,nm查看符号表信息
+
+- Linux下__attribute__((visibility ("default")))的使用
+
+  - https://blog.csdn.net/fengbingchun/article/details/78898623
+  - 这个简单可学习, 写了例子讲解,区别了windows下和linux下动态库的编写定义,使用
+  - 实践区别
+  - 结合CMake来编写测试项目
+
+- 使用QT Creator一步一步编写自己的CMake工程
+
+  - https://blog.csdn.net/houwenbin1986/article/details/78475943?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&dist_request_id=1331645.10695.16183803006753011&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control
+
+  - 各种动态库,静态库,第三方库生成和使用, Windows下VS,声明的导出规则处理
+
+    ```shell
+    #ifdef _WIN32
+        #ifdef LIBPERSON_BUILD
+            #define LIBPERSON_API __declspec(dllexport)
+        #else
+            #define LIBPERSON_API __declspec(dllimport)
+        #endif
+    #else
+        #define LIBPERSON_API
+    #endif
+    ```
+
+
+---
+
+- 1 ARM处理器分类
+  ARM的老产品树：
+
+  1、第一级——架构：ARMv4~ARMv6
+
+  2、第二级——产品系列：如ARMv4下的部分ARM7、部分ARM9
+
+  3、第三级——产品实例：如ARM7下的ARM7TDDMI(编号命名)
+
+  一维——架构 ：Armv6~Armv8
+
+  另一维——应用角度下的产品系列：Cortex-M,Cortex-R,Cortex-A
+
+  两个维度交际下生成子架构：如ARMv7下有ARMv7-A、ARMv7-R、ARMv7-M架构。
+
+  具体分类情况和指令集版本对应:
+
+  ![img](https://img-blog.csdnimg.cn/20200205001440210.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L05vRGlzdGFuY2VZ,size_16,color_FFFFFF,t_70)
+
+  具体产品实例无法直接根据产品名确定微架构的变化（架构版本），如Cortex-M4使用的是ARMv7E-M
+  原文链接：https://blog.csdn.net/NoDistanceY/article/details/104177163
+
+- https://github.com/lingcimi/jjdxm_ijkplayer
+
+  - 基于ijkplayer简单的UI界面 当前项目是基于ijkplayer项目进行的播放器界面UI封装。 是一个适用于 Android 的 RTMP 播放界面 SDK
+
+- 
+
