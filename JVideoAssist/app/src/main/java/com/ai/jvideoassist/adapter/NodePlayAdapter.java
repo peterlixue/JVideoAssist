@@ -313,6 +313,7 @@ public class NodePlayAdapter extends RecyclerView.Adapter<NodePlayAdapter.Recycl
         }
     }
 
+
     public void startAnotherAct() {
         try {
             //startActivity(new Intent("com.AndroidTest.SecondActivity"));//隐式intent
