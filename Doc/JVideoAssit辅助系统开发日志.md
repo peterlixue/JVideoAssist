@@ -2638,16 +2638,102 @@ QtCreator源码分析（一）——QtCreator源码简介
 
   - 基于ijkplayer简单的UI界面 当前项目是基于ijkplayer项目进行的播放器界面UI封装。 是一个适用于 Android 的 RTMP 播放界面 SDK
 
-
 ---
 
 2021年04月16日
 
 - 思考到优化
-  - 记录4画面播放的时候, 获取当前播放位置,然后设置在全屏播放时候, 播放的位置. 这个方法想了下, 只有播放本地视频,或者点播有作用把, 直播都是实时的,应该没有进度.
+
+  - 记录4画面播放的时候, 获取当前播放位置,然后设置在全屏播放时候, 播放的位置. 这个方法想了下, 只有播放本地视频,或者点播有作用吧, 直播都是实时的,应该没有进度.
   - getCurrentPosition()
     获取点播视频当前播放点
   - isPlaying()
     获取当前是否正在播放
   - isLive()
     获取当前播放是否为直播视频
+
+- nicevideoplayer
+
+  - 进入全屏
+
+    ```shell
+       /**
+         * 全屏，将mContainer(内部包含mTextureView和mController)从当前容器中移除，并添加到android.R.content中.
+         * 切换横屏时需要在manifest的activity标签下添加android:configChanges="orientation|keyboardHidden|screenSize"配置，
+         * 以避免Activity重新走生命周期
+         */
+     @Override
+        public void enterFullScreen() {
+            if (mCurrentMode == MODE_FULL_SCREEN) return;
+    
+            // 隐藏ActionBar、状态栏，并横屏
+            NiceUtil.hideActionBar(mContext);
+            NiceUtil.scanForActivity(mContext)
+                    .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    
+            ViewGroup contentView = (ViewGroup) NiceUtil.scanForActivity(mContext)
+                    .findViewById(android.R.id.content);
+            if (mCurrentMode == MODE_TINY_WINDOW) {
+                contentView.removeView(mContainer);
+            } else {
+                this.removeView(mContainer);
+            }
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            contentView.addView(mContainer, params);
+    
+            mCurrentMode = MODE_FULL_SCREEN;
+            mController.onPlayModeChanged(mCurrentMode);
+            LogUtil.d("MODE_FULL_SCREEN");
+        }
+    ```
+
+  - 退出全屏
+
+    ```shell
+     
+     /**
+         * 退出全屏，移除mTextureView和mController，并添加到非全屏的容器中。
+         * 切换竖屏时需要在manifest的activity标签下添加android:configChanges="orientation|keyboardHidden|screenSize"配置，
+         * 以避免Activity重新走生命周期.
+         *
+         * @return true退出全屏.
+         */
+     @Override
+        public boolean exitFullScreen() {
+            if (mCurrentMode == MODE_FULL_SCREEN) {
+                NiceUtil.showActionBar(mContext);
+                NiceUtil.scanForActivity(mContext)
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    
+                ViewGroup contentView = (ViewGroup) NiceUtil.scanForActivity(mContext)
+                        .findViewById(android.R.id.content);
+                contentView.removeView(mContainer);
+                LayoutParams params = new LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+                this.addView(mContainer, params);
+    
+                mCurrentMode = MODE_NORMAL;
+                mController.onPlayModeChanged(mCurrentMode);
+                LogUtil.d("MODE_NORMAL");
+                return true;
+            }
+            return false;
+        }
+    ```
+
+  - 总结,就是找到当前Activity窗口的根界面元素, 然后设置界面容器,和它对应的布局参数.
+
+  -  隐式使用dll时，不加__declspec(dllimport)完全可以，使用上没什么区别，只是在生成的二进制代码上稍微有点效率损失
+    - 它可以确定函数是否存在于 DLL 中，这使得编译器可以生成跳过间接寻址级别的代码
+  
+    - 结论 
+      导入全局、静态或者类成员变量需要__declspec(dllimport)
+  
+    - #define DllImport __declspec(dllimport)
+  
+      DllImport int j;
+  
+    - 
