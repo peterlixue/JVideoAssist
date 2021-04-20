@@ -2736,4 +2736,18 @@ QtCreator源码分析（一）——QtCreator源码简介
   
       DllImport int j;
   
-    - 
+  
+  ---
+  
+  2021年04月20日
+  
+  - Android如何创建自己的第三方库，并且能让其他项目依赖引用, 如何引用第三方库的过程
+    - AS中创建Android library, 然后写库的代码, 往里面造轮子，比如这里新建一个MyUtils类
+    - 上传到github或者gitee上面, 并用tag发布一个正式版本, github create a new release
+    - 最后一步，使用jitpack打包（https://jitpack.io/），输入 github账号名/项目名，点击Look up，然后Get it
+    - 实现了依赖引用，按照步骤使用即可，最后的链接添加到github项目的readme，可以出现相同的版本号小标签
+    - 然后在调用的项目中的gradle编写应用语句, repository, 填写maven{url "https://jitpack.io"}
+    - 添加依赖,dependencies { implementation 'com.github.peterlixue:MyLib:1.0.0'} 就可以啦
+    - 然后以后就只要迭代更新release版本,然后发布,然后调用的工程引用对应的版本就行
+    - https://blog.csdn.net/weixin_42164949/article/details/108789602   参考网址
+  - 
