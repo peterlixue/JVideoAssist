@@ -134,6 +134,20 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/buttonTest1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="测试地址1" />
+
+        <Button
+            android:id="@+id/buttonTest2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="清空地址" />
+
+        <Button
             android:id="@+id/buttonSave"
             android:layout_width="0dp"
             android:layout_height="match_parent"

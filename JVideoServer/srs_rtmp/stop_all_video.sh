@@ -6,3 +6,4 @@ ps aux | grep srs|grep -v grep|awk '{print $2}'|xargs kill -9
 echo "kill all finished"
 
 
+

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -21,27 +20,27 @@ import com.ai.jvideoassist.inter.IVideoIndex;
 
 import java.util.ArrayList;
 
-import static com.ai.jvideoassist.MainActivity.PAGE_ONE;
-
 
 public class FragSetting extends Fragment {
 
     private final String TAG = AppConfig.TAG + this.getClass().getSimpleName();
 
     private final String Description = "测试recycleview自定义2行2列,使用开源NodePlayer来同时播放RTSP流媒体";
-
+    private final String LOCAL_TEST_ADDRESS1 = "rtsp://192.168.1.101:5540/live/1";
 
     private Context mContext;
 
-    private EditText    mTxtVideo01;
-    private EditText    mTxtVideo02;
-    private EditText    mTxtVideo03;
-    private EditText    mTxtVideo04;
+    private EditText mTxtVideo01;
+    private EditText mTxtVideo02;
+    private EditText mTxtVideo03;
+    private EditText mTxtVideo04;
 
-    private Button      mBtnSave;
-    private Button      mBtnDefault;
+    private Button mBtnSave;
+    private Button mBtnDefault;
+    private Button mBtnTest1;
+    private Button mBtnTest2;
 
-    private boolean     mBDefault;
+    private boolean mBDefault;
 
     public FragSetting() {
 
@@ -51,7 +50,7 @@ public class FragSetting extends Fragment {
         public void onSettingChanged(ArrayList<Integer> videoIndexs);
     }
 
-    private SettingChangeCallBack   mSettingCall;
+    private SettingChangeCallBack mSettingCall;
 
     public void setSettingChangeCallBack(SettingChangeCallBack tcallback) {
         mSettingCall = tcallback;
@@ -94,70 +93,79 @@ public class FragSetting extends Fragment {
             }
         });
 
+        mBtnTest1 = view.findViewById(R.id.buttonTest1);
+        mBtnTest2 = view.findViewById(R.id.buttonTest2);
+        mBtnTest1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTxtVideo01.setText("rtsp://192.168.1.101:5540/live/1");
+                mTxtVideo02.setText("rtsp://192.168.1.101:5542/live/1");
+                mTxtVideo03.setText("rtsp://192.168.1.101:5544/live/1");
+                mTxtVideo04.setText("rtsp://192.168.1.101:5546/live/1");
+            }
+        });
+
+        mBtnTest2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTxtVideo01.setText("");
+                mTxtVideo02.setText("");
+                mTxtVideo03.setText("");
+                mTxtVideo04.setText("");
+            }
+        });
         Log.d(TAG, " onCreateView over");
         return view;
     }
 
     private void checkSettingChange(boolean bDefault) {
 
-        ArrayList<Integer>  videos = new ArrayList<Integer>();
-        if (bDefault)
-        {
-            if (mTxtVideo01.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
-            {
+        ArrayList<Integer> videos = new ArrayList<Integer>();
+        if (bDefault) {
+            if (mTxtVideo01.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false) {
                 videos.add(IVideoIndex.VIDEO1);
             }
-            if (mTxtVideo02.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
-            {
+            if (mTxtVideo02.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false) {
                 videos.add(IVideoIndex.VIDEO2);
 
             }
-            if (mTxtVideo03.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
-            {
+            if (mTxtVideo03.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false) {
                 videos.add(IVideoIndex.VIDEO3);
 
             }
-            if (mTxtVideo04.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false)
-            {
+            if (mTxtVideo04.getText().toString().contentEquals(AppConfig.getIns().mVideoURLDefault) == false) {
                 videos.add(IVideoIndex.VIDEO4);
             }
             mTxtVideo01.setText(AppConfig.getIns().mVideoURLDefault);
             mTxtVideo02.setText(AppConfig.getIns().mVideoURLDefault);
             mTxtVideo03.setText(AppConfig.getIns().mVideoURLDefault);
             mTxtVideo04.setText(AppConfig.getIns().mVideoURLDefault);
-        }
-        else
-        {
-            if (mTxtVideo01.getText().toString().contentEquals(AppConfig.getIns().mVideoURL01) == false)
-            {
+        } else {
+            if (mTxtVideo01.getText().toString().contentEquals(AppConfig.getIns().mVideoURL01) == false) {
                 videos.add(IVideoIndex.VIDEO1);
                 AppConfig.getIns().mVideoURL01 = mTxtVideo01.getText().toString();
             }
-            if (mTxtVideo02.getText().toString().contentEquals(AppConfig.getIns().mVideoURL02) == false)
-            {
+            if (mTxtVideo02.getText().toString().contentEquals(AppConfig.getIns().mVideoURL02) == false) {
                 videos.add(IVideoIndex.VIDEO2);
                 AppConfig.getIns().mVideoURL02 = mTxtVideo02.getText().toString();
             }
-            if ( (mTxtVideo03.getText().toString().contentEquals(AppConfig.getIns().mVideoURL03)) == false)
-            {
+            if ((mTxtVideo03.getText().toString().contentEquals(AppConfig.getIns().mVideoURL03)) == false) {
                 videos.add(IVideoIndex.VIDEO3);
                 AppConfig.getIns().mVideoURL03 = mTxtVideo03.getText().toString();
             }
-            if (mTxtVideo04.getText().toString().contentEquals(AppConfig.getIns().mVideoURL04) == false)
-            {
+            if (mTxtVideo04.getText().toString().contentEquals(AppConfig.getIns().mVideoURL04) == false) {
                 videos.add(IVideoIndex.VIDEO4);
                 AppConfig.getIns().mVideoURL04 = mTxtVideo04.getText().toString();
             }
         }
 
-        if (mSettingCall != null)
-        {
+        if (mSettingCall != null) {
             mSettingCall.onSettingChanged(videos);
         }
 
     }
 
-    public void showAlertDlg(){
+    public void showAlertDlg() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("提示");
@@ -177,7 +185,7 @@ public class FragSetting extends Fragment {
 
                     }
                 }
-            );
+        );
         builder.show();
 
     }
@@ -214,7 +222,15 @@ public class FragSetting extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d(TAG, "setUserVisibleHint:" + isVisibleToUser);
-
+        if (mBtnTest2 == null)
+        {
+            return;
+        }
+        if (isVisibleToUser == false)
+        {
+//            mBDefault = false;
+//            showAlertDlg();
+        }
 
     }
 
@@ -223,7 +239,6 @@ public class FragSetting extends Fragment {
         super.onHiddenChanged(hidden);
         Log.d(TAG, "onHiddenChanged:" + hidden);
     }
-
 
 
 }

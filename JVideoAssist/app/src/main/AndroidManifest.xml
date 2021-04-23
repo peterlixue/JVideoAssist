@@ -22,7 +22,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:windowSoftInputMode="stateHidden|adjustPan" >
         <activity android:name=".util.SecondActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>

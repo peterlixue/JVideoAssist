@@ -2736,7 +2736,6 @@ QtCreator源码分析（一）——QtCreator源码简介
   
       DllImport int j;
   
-  
   ---
   
   2021年04月20日
@@ -2750,4 +2749,9 @@ QtCreator源码分析（一）——QtCreator源码简介
     - 添加依赖,dependencies { implementation 'com.github.peterlixue:MyLib:1.0.0'} 就可以啦
     - 然后以后就只要迭代更新release版本,然后发布,然后调用的工程引用对应的版本就行
     - https://blog.csdn.net/weixin_42164949/article/details/108789602   参考网址
-  - 
+  - 安卓系统键盘弹出后不压缩控件大小
+    - **在 Androidmanifest文件中 对   activity设置  android:windowSoftInputMode="stateHidden|adjustPan" 属性可以让系统键盘弹出后不压缩控件大小** 
+    - 安卓软键盘弹出，Activity背景被压缩的解决办法
+    - https://blog.csdn.net/u012889434/article/details/46714121
+  - Android判断某个Activity是否正在前台显示
+    - https://blog.csdn.net/wuqingsen1/article/details/83859913
