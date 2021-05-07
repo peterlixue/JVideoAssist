@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<ServerConfig>
+    <rtspPort>5546</rtspPort>
+    <videoDevice>video6</videoDevice>
+    <originWidth>640</originWidth>
+    <originHeight>480</originHeight>
+    <videoCodec>0</videoCodec>
+    <framerate>30</framerate>
+    <biterate>1500000</biterate>
+    <leftStartX>0</leftStartX>
+    <leftStartY>0</leftStartY>
+    <rightStartX>0</rightStartX>
+    <rightStartY>0</rightStartY>
+    <captureWidth>320</captureWidth>
+    <captureHeight>480</captureHeight>
+</ServerConfig>

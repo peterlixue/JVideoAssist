@@ -105,7 +105,8 @@
     - 点击EMUI版本号几次也没有提示, 后面发现连续点击 版本号(GPU Turbo)这个, 平板底部提示,你已处于开发者模式
     - 退出这个关于平板电脑设置, 点击系统和更新设置, 进入开发人员选项, 发现底部有一个调试的选项设置
     - 根据开发要求, 选择USB调试开启,其他默认选项,
-    - 配置Android Studio, 根据前面的教程,建立文件,重启adb-server,列出设备,adb devices.
+    - 配置Android Studio, 根
+    - 据前面的教程,建立文件,重启adb-server,列出设备,adb devices.
     - 然后回到Android studio,重新扫描设备,发现设备列表中出现了设备HuaWei Tec.
     - 点击绿色小箭头,运行app程序,发现程序以及成功在平板电脑上面运行了,可以看到AS 下面的运行信息.
 
@@ -2264,6 +2265,7 @@ QtCreator源码分析（一）——QtCreator源码简介
   - 官网下载libass,然后install fabiridio, 在运行configure, make,makeinstall
   - http://www.linuxfromscratch.org/blfs/view/svn/multimedia/libass.html  我安装的版本是0.9 估计太高了
   - https://blog.csdn.net/crabdave/article/details/84835301
+  - 从网上下载了libass5_0.13.1-1_amd64.deb, 直接安装了. 然后运行livecatpure程序成功.
   - 安装libass5版本,就可以,然后注意make install
   
 - 实际效果:
