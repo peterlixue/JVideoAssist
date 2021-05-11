@@ -1632,7 +1632,8 @@
 - 本机服务器创建了一个推流脚本, startCameraRTMP.sh
 
   - 确实使用在线秒表, 以及摄像头拍照当前秒表数据和在线秒表数据, 用截屏软件截取某一个时刻的图像,观察拍摄画面数据,和在线秒表数据,得出现实的延迟情况. 大概170ms, 对于mjpg-stream
-  - 
+  
+- 
 
 - 下一步解决嵌入式ARM处理设备上面的,视频推流就可以. 还可以参考srs中的低延时方案,来进行视频流的分发传输.
 
@@ -2757,4 +2758,19 @@ QtCreator源码分析（一）——QtCreator源码简介
     - https://blog.csdn.net/u012889434/article/details/46714121
   - Android判断某个Activity是否正在前台显示
     - https://blog.csdn.net/wuqingsen1/article/details/83859913
-    - 
+
+---
+
+2021年05月11日10
+
+- ffplay 播放 USB camera
+  - https://blog.csdn.net/chengyq116/article/details/98471795
+  - 报错的处理,在嵌入式arm的nanno上面测试USB相机.
+  - sudo dbus-uuidgen > /var/lib/dbus/machine-id  提示权限禁止, 通过网上找到更改这个文件的权限,再来输入这个设置命令
+  - sudo chmod 777 /var/lib/dbus/machine-id,  
+  - sudo dbus-uuidgen > /var/lib/dbus/machine-id
+  - 在播放usb设备,  ffplay /dev/video0
+  - ffplay -f video4linux2 -framerate 30 -video_size hd720 /dev/video0
+  - ffplay -pixel_format rgb24 -video_size 320x240 -framerate 5 -i rgb24_320x240.rgb
+- GTest的安装与使用
+  - https://www.cnblogs.com/helloworldcode/p/9606838.html
