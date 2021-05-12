@@ -2774,3 +2774,63 @@ QtCreator源码分析（一）——QtCreator源码简介
   - ffplay -pixel_format rgb24 -video_size 320x240 -framerate 5 -i rgb24_320x240.rgb
 - GTest的安装与使用
   - https://www.cnblogs.com/helloworldcode/p/9606838.html
+
+---
+
+2021年05月12日16:17:33
+
+- 今天想将自己编译的Android app程序安装到bt-300眼睛中, 通过拆拔USB连接线, Ubuntu 的AS可以识别BT-300, 但是BT-300的sdk api 是22, Android 5.1的版本, 我编译的程序是30, Android 10. 可能造成版本库不兼容的问题.
+
+- as提示是科大讯飞的libmsc.so库没有找到,导致程序启动的时候, 创建UI界面失败, 程序在眼镜里面运行失败.
+
+- arm版本已经逐步淘汰了，arm架构的推荐使用armeabi-v7a。
+  如果您需要将应用push到设备使用，请将设备cpu对应指令集的libmsc.so push到/system/lib中。
+  集成到项目，需要将sdk中Demo/src/main/下文件拷贝到项目main中，以AS为例，且需要在项目main文件夹下新建Jnilibs并拷贝libmsc.so
+  msc.jar需要拷贝至项目libs下，并且右键jar添加Add As Library。
+  sdk下文件夹main/assets/，自带UI页面(iflytek文件夹)和相关其他服务资源文件(语法文件、音频示例、词表)，使用自带UI接口时，可以将assets/iflytek文件拷贝到项目中;
+
+- 错误信息提示:
+
+  ```shell
+  E/MscSpeechLog: loadLibrary msc error:java.lang.UnsatisfiedLinkError: dalvik.system.PathClassLoader[DexPathList[[zip file "/data/app/com.ai.jvideoassist-1/base.apk"],nativeLibraryDirectories=[/data/app/com.ai.jvideoassist-1/lib/x86, /vendor/lib, /system/lib]]] couldn't find "libmsc.so"
+  E/MscSpeechLog: init failed
+  W/System.err: 组件未安装.(错误码:21002)
+          at com.iflytek.cloud.SpeechUtility.<init>(SourceFile:201)
+  ```
+
+- 本质是 程序运行的时候没有找到这个动态库libmsc.so,于是在网上搜罗了一番解决方案，基本都是说把 `.so` 文件目录放到 `src/main/jniLibs` 下，或者放到`app/libs`下，然后在 `build.gradle` 中配置 `sourceSets`。然而，我都尝试了一遍并没有解决这个问题。
+
+- 科大讯飞的语音合成只支持arm，并且我根据网上的解决问题的说法,在ndk中配置了x86。错误配置如下：
+
+  ```shell
+  defaultConfig {
+          applicationId "com.ai.jvideoassist"
+          minSdkVersion 16
+          targetSdkVersion 30
+          versionCode 1
+          versionName "1.0"
+          testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  
+          multiDexEnabled true
+          ndk {
+          // 设置支持的SO库架构
+              abiFilters "armeabi", "armeabi-v7a", "x86","arm64-v8a"
+          }
+      }
+  ```
+
+  重要的是 `但科大讯飞的语音合成只支持arm`, 所以这个配置说明是错误的
+
+- 将x86相关的配置删除后，如下，再次启动就没问题了
+
+  ```shell
+  ndk {
+              abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+          }
+  ```
+
+- # 集成科大讯飞语音合成Android SDK遇到的坑
+
+- https://www.jianshu.com/p/f3fd3015574a,  辛亏这个博主,解决了我的Android程序部署到BT-300 Android5.1设备上面的问题, 然后程序成功运行, 正常播放了CCTV的视频.
+- 分享成就你我.  科大讯飞说明了, so库支持Android 4.1版本以上. 所以高版本的30api部署到低版本的22的眼镜上面还是可以. 解决了程序兼容的问题.
+- 

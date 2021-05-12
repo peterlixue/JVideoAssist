@@ -100,24 +100,31 @@ public class FragVoice extends Fragment {
 
         //1.创建SpeechRecognizer对象，第二个参数：本地听写时传InitListener
         mRecDlg = new RecognizerDialog(mContext,mInitListener);
+        if (mRecDlg != null)
+        {
+            //2.设置听写参数，详见《科大讯飞MSC API手册(Android)》SpeechConstant类
+            //iat：日常用语        //medical：医疗
+            //mRecDlg.setParameter(SpeechConstant.DOMAIN, "iat");
+            mRecDlg.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+            mRecDlg.setParameter(SpeechConstant.ACCENT, "mandarin ");
+            // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
+            mRecDlg.setParameter(SpeechConstant.VAD_BOS,"4000");
 
-        //2.设置听写参数，详见《科大讯飞MSC API手册(Android)》SpeechConstant类
-        //iat：日常用语        //medical：医疗
-        //mRecDlg.setParameter(SpeechConstant.DOMAIN, "iat");
-        mRecDlg.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-        mRecDlg.setParameter(SpeechConstant.ACCENT, "mandarin ");
-        // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-        mRecDlg.setParameter(SpeechConstant.VAD_BOS,"4000");
+            // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
+            mRecDlg.setParameter(SpeechConstant.VAD_EOS, "1000");
 
-        // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
-        mRecDlg.setParameter(SpeechConstant.VAD_EOS, "1000");
+            //设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
+            mRecDlg.setParameter(SpeechConstant.ASR_PTT,"0");
+            // 设置返回结果格式
+            mRecDlg.setParameter(SpeechConstant.RESULT_TYPE, resultType);
 
-        //设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
-        mRecDlg.setParameter(SpeechConstant.ASR_PTT,"0");
-        // 设置返回结果格式
-        mRecDlg.setParameter(SpeechConstant.RESULT_TYPE, resultType);
+            mRecDlg.setListener(mRecoDlgListener);
 
-        mRecDlg.setListener(mRecoDlgListener);
+        }
+        else
+        {
+            Log.d(TAG,"warning: mRecDlg is null when in onCreateView");
+        }
 
         Log.d(TAG,"onCreateView");
         return view;
