@@ -2779,6 +2779,9 @@ QtCreator源码分析（一）——QtCreator源码简介
 
 2021年05月12日16:17:33
 
+- Epson BT-300 眼镜插入Ubuntu, 然后被AndroidStudio 识别设备. 步骤, 先让眼镜开机, 然后设置眼镜的开发这选项, 设置USB支持调试模式, 然后设置安全, 支持未知来源软件安装, 退出设置.
+- 重新插拔USB线到电脑, 一会儿就自动识别出设备选项,就可以观察app调试的日志了.
+
 - 今天想将自己编译的Android app程序安装到bt-300眼睛中, 通过拆拔USB连接线, Ubuntu 的AS可以识别BT-300, 但是BT-300的sdk api 是22, Android 5.1的版本, 我编译的程序是30, Android 10. 可能造成版本库不兼容的问题.
 
 - as提示是科大讯飞的libmsc.so库没有找到,导致程序启动的时候, 创建UI界面失败, 程序在眼镜里面运行失败.
@@ -2833,4 +2836,12 @@ QtCreator源码分析（一）——QtCreator源码简介
 
 - https://www.jianshu.com/p/f3fd3015574a,  辛亏这个博主,解决了我的Android程序部署到BT-300 Android5.1设备上面的问题, 然后程序成功运行, 正常播放了CCTV的视频.
 - 分享成就你我.  科大讯飞说明了, so库支持Android 4.1版本以上. 所以高版本的30api部署到低版本的22的眼镜上面还是可以. 解决了程序兼容的问题.
-- 
+
+---
+
+2021年05月13日
+
+- 智能眼镜如何通过已有的安装包安装APP - 爱普生产品常见问题 - 爱普生中国
+  - https://www.epson.com.cn/apps/tech_support/faq/QA-content.aspx?ColumnId=31618&ArticleId=43012&pg=&view=&columnid2=31618
+- 通过电脑拷贝的APP安装包，安装时提示禁止安装？ - 爱普生产品常见问题 - 爱普生中国
+  - https://www.epson.com.cn/Apps/tech_support/faq/QA-content.aspx?ColumnId=31617&ArticleId=43011
